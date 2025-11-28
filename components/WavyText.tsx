@@ -40,8 +40,8 @@ export default function WavyText({ text, className = "" }: WavyTextProps) {
     };
 
     return (
-        <motion.div
-            style={{ display: "flex", overflow: "hidden" }}
+        <motion.span
+            style={{ display: "inline-flex", overflow: "hidden" }}
             className={className}
             initial="initial"
             whileHover="hover"
@@ -66,6 +66,6 @@ export default function WavyText({ text, className = "" }: WavyTextProps) {
                     {letter === " " ? "\u00A0" : letter}
                 </motion.span>
             ))}
-        </motion.div>
+        </motion.span>
     );
 }

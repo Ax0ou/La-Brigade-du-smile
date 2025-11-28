@@ -44,7 +44,7 @@ export default function Hero() {
                         className="space-y-4"
                     >
                         <p className="text-lg text-foreground/90 md:text-xl leading-relaxed">
-                            La Brigade du Smile est un service de <span className="font-bold text-primary">compagnons intergénérationnels</span> des étudiants et jeunes professionnels formés pour accompagner les seniors.
+                            La Brigade du Smile est un service de <span className="font-bold text-primary">compagnons intergénérationnels:</span> des étudiants et jeunes professionnels formés pour accompagner les seniors.
                         </p>
                         <p className="text-lg text-foreground/80 md:text-xl leading-relaxed">
                             Notre but : leur apporter <span className="font-bold text-secondary">dynamisme, énergie, stimulation et aide pratique</span> pour améliorer leur quotidien.

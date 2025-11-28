@@ -61,14 +61,57 @@ const personas = {
 export default function PersonaSelector() {
     const [selected, setSelected] = useState<PersonaType>("student");
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [isSuccess, setIsSuccess] = useState(false);
 
     const currentPersona = personas[selected];
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Form submitted for:", selected);
+        setIsSubmitting(true);
+
+        const formData = new FormData(e.target as HTMLFormElement);
+        const data = {
+            email: formData.get("email"),
+            phone: formData.get("phone"),
+            type: selected,
+        };
+
+        try {
+            const response = await fetch("/api/leads", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (response.ok) {
+                // Trigger success animation
+                setIsSuccess(true);
+                // Reset after delay or keep it? 
+                // Let's keep it in success state until closed.
+            } else {
+                const errorData = await response.json();
+                console.error("Submission error:", errorData);
+                alert("Une erreur est survenue. Veuillez réessayer.");
+            }
+        } catch (error) {
+            console.error("Network error:", error);
+            alert("Erreur de connexion. Veuillez vérifier votre internet.");
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    // Reset state when modal closes
+    const handleClose = () => {
         setIsModalOpen(false);
-        alert("Merci ! Nous avons bien reçu votre demande.");
+        // Small delay to reset state after modal is closed
+        setTimeout(() => {
+            setIsSuccess(false);
+            setIsSubmitting(false);
+        }, 300);
     };
 
     return (
@@ -159,36 +202,171 @@ export default function PersonaSelector() {
 
             <Modal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
-                title={currentPersona.modalTitle}
+                onClose={handleClose}
+                title={isSuccess ? " " : currentPersona.modalTitle}
             >
-                <form onSubmit={handleSubmit} className="space-y-4">
-                    <p className="text-foreground/80 mb-4">{currentPersona.modalDesc}</p>
-                    <div className="space-y-2">
-                        <label className="text-sm font-bold text-foreground">Email</label>
-                        <input
-                            type="email"
-                            required
-                            className="w-full p-3 rounded-xl border-2 border-stone-200 focus:border-primary focus:outline-none transition-colors"
-                            placeholder="votre@email.com"
-                        />
-                    </div>
-                    <div className="space-y-2">
-                        <label className="text-sm font-bold text-foreground">Téléphone</label>
-                        <input
-                            type="tel"
-                            required
-                            className="w-full p-3 rounded-xl border-2 border-stone-200 focus:border-primary focus:outline-none transition-colors"
-                            placeholder="06 12 34 56 78"
-                        />
-                    </div>
-                    <button
-                        type="submit"
-                        className="w-full py-3 bg-primary text-white font-bold rounded-xl hover:bg-secondary transition-colors mt-4"
-                    >
-                        Envoyer
-                    </button>
-                </form>
+                <AnimatePresence mode="wait">
+                    {isSuccess ? (
+                        <motion.div
+                            key="success"
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            className="flex flex-col items-center justify-center py-8 text-center"
+                        >
+                            {/* Success Icon Container */}
+                            <div className="relative mb-6">
+                                {/* Animated Background Blob */}
+                                <motion.div
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    transition={{ type: "spring", damping: 12, delay: 0.2 }}
+                                    className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center"
+                                >
+                                    {/* Animated Checkmark */}
+                                    <motion.svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="48"
+                                        height="48"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="3"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        className="text-green-600"
+                                        initial={{ pathLength: 0, opacity: 0 }}
+                                        animate={{ pathLength: 1, opacity: 1 }}
+                                        transition={{ duration: 0.5, delay: 0.4 }}
+                                    >
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </motion.svg>
+                                </motion.div>
+
+                                {/* Flying Plane (Decorative, leaving the scene) */}
+                                <motion.div
+                                    initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
+                                    animate={{
+                                        x: 100,
+                                        y: -100,
+                                        opacity: 0,
+                                        scale: 0.5,
+                                        rotate: -45
+                                    }}
+                                    transition={{ duration: 0.8, ease: "easeIn" }}
+                                    className="absolute top-0 left-0 text-primary pointer-events-none"
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <line x1="22" x2="11" y1="2" y2="13"></line>
+                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                    </svg>
+                                </motion.div>
+                            </div>
+
+                            <motion.div
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: 0.5 }}
+                                className="space-y-2"
+                            >
+                                <h3 className="text-2xl font-bold text-gray-900">Message envoyé !</h3>
+                                <p className="text-gray-500 max-w-xs mx-auto">
+                                    Nous avons bien reçu votre demande. <br />
+                                    Notre équipe vous recontactera sous 24h.
+                                </p>
+                            </motion.div>
+
+                            <motion.button
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{ delay: 1 }}
+                                onClick={handleClose}
+                                className="mt-8 text-sm font-medium text-gray-400 hover:text-gray-600 transition-colors"
+                            >
+                                Fermer
+                            </motion.button>
+                        </motion.div>
+                    ) : (
+                        <motion.form
+                            key="form"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            onSubmit={handleSubmit}
+                            className="space-y-4"
+                        >
+                            <p className="text-foreground/80 mb-4">{currentPersona.modalDesc}</p>
+                            <div className="space-y-2">
+                                <label className="text-sm font-bold text-foreground">Email</label>
+                                <input
+                                    name="email"
+                                    type="email"
+                                    required
+                                    className="w-full p-3 rounded-xl border-2 border-stone-200 focus:border-primary focus:outline-none transition-colors"
+                                    placeholder="votre@email.com"
+                                />
+                            </div>
+                            <div className="space-y-2">
+                                <label className="text-sm font-bold text-foreground">Téléphone</label>
+                                <input
+                                    name="phone"
+                                    type="tel"
+                                    required
+                                    className="w-full p-3 rounded-xl border-2 border-stone-200 focus:border-primary focus:outline-none transition-colors"
+                                    placeholder="06 12 34 56 78"
+                                />
+                            </div>
+                            <button
+                                type="submit"
+                                disabled={isSubmitting}
+                                className="w-full py-3 bg-primary text-white font-bold rounded-xl hover:bg-secondary transition-all mt-4 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group overflow-hidden relative"
+                            >
+                                <span className={`transition-transform duration-300 ${isSubmitting ? '-translate-y-10' : 'translate-y-0'}`}>
+                                    Envoyer
+                                </span>
+                                {isSubmitting && (
+                                    <div className="absolute inset-0 flex items-center justify-center">
+                                        <motion.div
+                                            animate={{ rotate: 360 }}
+                                            transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                                        >
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                                <path d="M21 12a9 9 0 1 1-6.219-8.56" />
+                                            </svg>
+                                        </motion.div>
+                                    </div>
+                                )}
+                                {!isSubmitting && (
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        className="group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform"
+                                    >
+                                        <line x1="22" x2="11" y1="2" y2="13"></line>
+                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                                    </svg>
+                                )}
+                            </button>
+                        </motion.form>
+                    )}
+                </AnimatePresence>
             </Modal>
         </section>
     );
