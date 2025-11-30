@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, User, Users, Building2 } from "lucide-react";
-import Modal from "./Modal";
+import { Check, User, Users, Building2, ArrowLeft, Send, Sparkles } from "lucide-react";
 
 type PersonaType = "student" | "family" | "pro";
+type Step = "selection" | "details" | "success";
 
 const personas = {
     student: {
@@ -13,58 +13,92 @@ const personas = {
         label: "Devenez compagnon",
         icon: User,
         color: "bg-primary",
-        title: "Complètes tes revenus tout en créant du lien social avec tes ainés !",
+        text: "text-primary",
+        border: "border-primary",
+        shadow: "shadow-primary/30",
+        gradient: "from-primary/20 to-primary/5",
+        title: "Complétez vos revenus en créant du lien",
+        description: "Rejoignez une communauté de jeunes engagés et vivez une expérience humaine unique.",
         points: [
-            "Complète tes revenus : Finis les jobs étudiants non gratifiants.",
-            "Choisis tes missions selon tes disponibilités.",
-            "Crée du lien : Ils t’apporteront tout autant que tu leur rapportes.",
-            "Rejoins la communauté : Des jeunes engagés qui partagent des valeurs communes.",
+            "Jobs flexibles et gratifiants",
+            "Missions adaptées à votre emploi du temps",
+            "Impact social concret",
+            "Communauté active et bienveillante",
         ],
-        cta: "Nous rejoindre",
-        modalTitle: "Rejoindre la Brigade",
-        modalDesc: "Laisse nous tes coordonnés mail nous te recontacterons au plus vite",
+        cta: "Rejoindre l'aventure",
+        formTitle: "C'est parti !",
+        formDesc: "Laissez-nous vos coordonnées, on vous recontacte très vite.",
     },
     family: {
         id: "family",
         label: "Trouver un compagnon",
         icon: Users,
         color: "bg-secondary",
-        title: "Offrez à votre proche un compagnon de confiance.",
+        text: "text-secondary",
+        border: "border-secondary",
+        shadow: "shadow-secondary/30",
+        gradient: "from-secondary/20 to-secondary/5",
+        title: "Offrez un compagnon de confiance",
+        description: "Une présence bienveillante et stimulante pour vos proches, assurée par des jeunes sélectionnés.",
         points: [
-            "Apporter jeunesse, joie et stimulation.",
-            "Des étudiants sélectionnés et formés (processus rigoureux).",
-            "Un accompagnement personnalisé (selon passions).",
-            "Tranquilité d’esprit (accompagnement fiable).",
+            "Stimulation et joie de vivre",
+            "Étudiants rigoureusement sélectionnés",
+            "Accompagnement sur-mesure",
+            "Tranquillité d'esprit totale",
         ],
-        cta: "Ecrivez nous !",
-        modalTitle: "Trouver un compagnon",
-        modalDesc: "Laissez nous vos coordonnées : mail et tel nous vous rappelons dans les 24h",
+        cta: "Trouver une perle",
+        formTitle: "Parlons-en",
+        formDesc: "Dites-nous comment nous pouvons vous aider.",
     },
     pro: {
         id: "pro",
-        label: "Professionnels du Mieux Vieillir",
+        label: "Professionnels",
         icon: Building2,
         color: "bg-accent-green",
-        title: "Renforcez le bien être de vos résidents grâce à nos compagnons intergénérationnels.",
+        text: "text-accent-green",
+        border: "border-accent-green",
+        shadow: "shadow-accent-green/30",
+        gradient: "from-accent-green/20 to-accent-green/5",
+        title: "Renforcez le bien-être de vos résidents",
+        description: "Une solution clé en main pour dynamiser la vie sociale de votre établissement.",
         points: [
-            "Améliore la qualité de vie des résidents.",
-            "Soutien au personnel soignant (délégation d'activités sociales).",
-            "Renforce l’image de votre établissement.",
-            "Flexibilité et adaptation.",
+            "Amélioration de la qualité de vie",
+            "Soutien aux équipes soignantes",
+            "Image d'établissement innovante",
+            "Flexibilité d'intervention",
         ],
-        cta: "Nous contacter",
-        modalTitle: "Espace Professionnel",
-        modalDesc: "Laissez un mail et un numéro, nous vous rapelerons dans les 24h",
+        cta: "Découvrir l'offre",
+        formTitle: "Espace Pro",
+        formDesc: "Laissez vos coordonnées pour une démo ou un devis.",
     },
 };
 
 export default function PersonaSelector() {
+    const [step, setStep] = useState<Step>("selection");
     const [selected, setSelected] = useState<PersonaType>("student");
-    const [isModalOpen, setIsModalOpen] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const [isSuccess, setIsSuccess] = useState(false);
+    const sectionRef = useRef<HTMLElement>(null);
 
     const currentPersona = personas[selected];
+
+    useEffect(() => {
+        if (step === "details" && sectionRef.current) {
+            const yOffset = -100; // Offset to account for fixed header if any, or just breathing room
+            const element = sectionRef.current;
+            const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+
+            window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+    }, [step]);
+
+    const handleSelect = (type: PersonaType) => {
+        setSelected(type);
+        setStep("details");
+    };
+
+    const handleBack = () => {
+        setStep("selection");
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -80,294 +114,275 @@ export default function PersonaSelector() {
         try {
             const response = await fetch("/api/leads", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(data),
             });
 
             if (response.ok) {
-                // Trigger success animation
-                setIsSuccess(true);
-                // Reset after delay or keep it? 
-                // Let's keep it in success state until closed.
+                setStep("success");
             } else {
-                const errorData = await response.json();
-                console.error("Submission error:", errorData);
                 alert("Une erreur est survenue. Veuillez réessayer.");
             }
         } catch (error) {
             console.error("Network error:", error);
-            alert("Erreur de connexion. Veuillez vérifier votre internet.");
+            alert("Erreur de connexion.");
         } finally {
             setIsSubmitting(false);
         }
     };
 
-    // Reset state when modal closes
-    const handleClose = () => {
-        setIsModalOpen(false);
-        // Small delay to reset state after modal is closed
-        setTimeout(() => {
-            setIsSuccess(false);
-            setIsSubmitting(false);
-        }, 300);
-    };
-
     return (
-        <section id="persona-selector" className="py-20 px-4 md:px-6 container mx-auto">
-            <div className="flex flex-col items-center space-y-12">
-                <div className="text-center space-y-4">
-                    <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground">
-                        Quelle est votre mission ?
-                    </h2>
-                    <p className="text-lg text-foreground/80">
-                        Choisissez votre profil pour découvrir comment nous pouvons avancer ensemble.
-                    </p>
-                </div>
+        <section ref={sectionRef} id="persona-selector" className="py-24 px-4 md:px-6 container mx-auto min-h-[800px] flex flex-col justify-center relative">
+            {/* Background Elements */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.8)_0%,rgba(255,255,255,0)_70%)] pointer-events-none -z-10" />
 
-                {/* Tabs */}
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full max-w-4xl">
-                    {(Object.keys(personas) as PersonaType[]).map((key) => {
-                        const persona = personas[key];
-                        const isSelected = selected === key;
-                        return (
-                            <button
-                                key={key}
-                                onClick={() => setSelected(key)}
-                                className={`relative p-6 rounded-2xl border-2 transition-all duration-300 flex flex-col items-center gap-3 text-center
-                  ${isSelected
-                                        ? `border-primary bg-primary/5 shadow-lg scale-105 z-10`
-                                        : "border-stone-200 bg-white hover:border-primary/50 hover:bg-stone-50"
-                                    }`}
-                            >
-                                <div
-                                    className={`p-3 rounded-full ${isSelected ? "bg-primary text-white" : "bg-stone-100 text-stone-500"
-                                        }`}
-                                >
-                                    <persona.icon className="w-6 h-6" />
-                                </div>
-                                <span
-                                    className={`font-bold text-lg ${isSelected ? "text-primary" : "text-stone-600"
-                                        }`}
-                                >
-                                    {persona.label}
-                                </span>
-                            </button>
-                        );
-                    })}
-                </div>
+            <div className="max-w-6xl mx-auto w-full">
 
-                {/* Content Area */}
-                <div className="w-full max-w-4xl bg-white rounded-3xl border-2 border-primary/20 p-8 md:p-12 shadow-xl relative overflow-hidden">
-                    <AnimatePresence mode="wait">
+                {/* Header - Only visible in selection step */}
+                <AnimatePresence>
+                    {step === "selection" && (
                         <motion.div
-                            key={selected}
-                            initial={{ opacity: 0, x: 20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            exit={{ opacity: 0, x: -20 }}
-                            transition={{ duration: 0.3 }}
-                            className="space-y-8"
+                            initial={{ opacity: 0, y: -20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -20 }}
+                            className="text-center mb-20 space-y-6"
                         >
-                            <div className="space-y-4">
-                                <h3 className="text-2xl md:text-3xl font-serif font-bold text-foreground">
-                                    {currentPersona.title}
-                                </h3>
-                                <div className="h-1 w-20 bg-primary rounded-full" />
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/40 backdrop-blur-md border border-white/50 shadow-sm text-sm font-medium text-foreground/70">
+                                <Sparkles className="w-4 h-4 text-primary" />
+                                <span>Une expérience sur-mesure</span>
                             </div>
-
-                            <ul className="grid gap-4 md:grid-cols-2">
-                                {currentPersona.points.map((point, index) => (
-                                    <li key={index} className="flex items-start gap-3">
-                                        <div className="mt-1 p-1 rounded-full bg-accent-green/20 text-accent-green">
-                                            <Check className="w-4 h-4" />
-                                        </div>
-                                        <span className="text-foreground/80 font-medium">{point}</span>
-                                    </li>
-                                ))}
-                            </ul>
-
-                            <div className="pt-4">
-                                <button
-                                    onClick={() => setIsModalOpen(true)}
-                                    className="px-8 py-4 bg-primary text-white font-bold rounded-full text-lg shadow-lg hover:bg-secondary hover:scale-105 transition-all"
-                                >
-                                    {currentPersona.cta}
-                                </button>
-                            </div>
+                            <h2 className="text-5xl md:text-6xl font-serif font-bold text-foreground tracking-tight">
+                                Quelle est votre <span className="italic text-primary">mission</span> ?
+                            </h2>
+                            <p className="text-xl text-foreground/60 max-w-2xl mx-auto font-light">
+                                Sélectionnez le profil qui vous correspond pour découvrir comment nous pouvons avancer ensemble.
+                            </p>
                         </motion.div>
+                    )}
+                </AnimatePresence>
+
+                <div className="relative min-h-[500px] flex flex-col justify-center">
+                    <AnimatePresence mode="wait">
+
+                        {/* STEP 1: SELECTION */}
+                        {step === "selection" && (
+                            <motion.div
+                                key="selection"
+                                initial={{ opacity: 0, scale: 0.95 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                exit={{ opacity: 0, scale: 0.95, filter: "blur(10px)" }}
+                                transition={{ duration: 0.5, ease: "easeOut" }}
+                                className="grid grid-cols-1 md:grid-cols-3 gap-8"
+                            >
+                                {(Object.keys(personas) as PersonaType[]).map((key, index) => {
+                                    const persona = personas[key];
+                                    return (
+                                        <motion.button
+                                            key={key}
+                                            onClick={() => handleSelect(key)}
+                                            initial={{ opacity: 0, y: 20 }}
+                                            animate={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: index * 0.1 }}
+                                            whileHover={{ y: -12, scale: 1.02 }}
+                                            whileTap={{ scale: 0.98 }}
+                                            className={`group relative flex flex-col p-8 rounded-[2rem] bg-white/40 backdrop-blur-xl border border-white/60 hover:border-white shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden text-left h-full ${persona.shadow}`}
+                                        >
+                                            {/* Gradient Background on Hover */}
+                                            <div className={`absolute inset-0 bg-gradient-to-br ${persona.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+
+                                            {/* Icon */}
+                                            <div className={`relative mb-8 w-20 h-20 rounded-2xl ${persona.color} flex items-center justify-center text-white shadow-lg group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
+                                                <persona.icon className="w-10 h-10" />
+                                                <div className="absolute inset-0 bg-black/10 rounded-2xl" />
+                                                <div className="absolute inset-0 bg-gradient-to-br from-white/40 to-transparent rounded-2xl" />
+                                            </div>
+
+                                            {/* Content */}
+                                            <div className="relative z-10">
+                                                <h3 className="text-3xl font-serif font-bold text-foreground mb-4 group-hover:translate-x-1 transition-transform duration-300">
+                                                    {persona.label}
+                                                </h3>
+                                                <p className="text-foreground/70 text-base leading-relaxed mb-8 group-hover:text-foreground/90 transition-colors">
+                                                    {persona.description}
+                                                </p>
+                                            </div>
+
+                                            {/* CTA */}
+                                            <div className={`relative mt-auto flex items-center gap-3 text-sm font-bold uppercase tracking-wider ${persona.text} group-hover:gap-5 transition-all duration-300`}>
+                                                <span>Commencer</span>
+                                                <ArrowLeft className="w-5 h-5 rotate-180" />
+                                            </div>
+                                        </motion.button>
+                                    );
+                                })}
+                            </motion.div>
+                        )}
+
+                        {/* STEP 2: DETAILS & FORM */}
+                        {step === "details" && (
+                            <motion.div
+                                key="details"
+                                initial={{ opacity: 0, y: 40 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: 40 }}
+                                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                                className="bg-white/60 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/50 relative"
+                            >
+                                <div className="grid lg:grid-cols-12 min-h-[500px]">
+                                    {/* Left: Details */}
+                                    <div className={`lg:col-span-5 p-6 md:p-10 ${currentPersona.color} text-white flex flex-col justify-between relative overflow-hidden`}>
+                                        {/* Abstract Shapes */}
+                                        <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl" />
+                                        <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/5 rounded-full translate-y-1/3 -translate-x-1/3 blur-2xl" />
+
+                                        <div className="relative z-10">
+                                            <button
+                                                onClick={handleBack}
+                                                className="flex items-center gap-2 text-white/80 hover:text-white transition-colors mb-8 group bg-white/10 w-fit px-3 py-1.5 rounded-full backdrop-blur-sm hover:bg-white/20"
+                                            >
+                                                <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
+                                                <span className="text-sm font-medium">Retour</span>
+                                            </button>
+
+                                            <motion.div
+                                                initial={{ opacity: 0, x: -20 }}
+                                                animate={{ opacity: 1, x: 0 }}
+                                                transition={{ delay: 0.2 }}
+                                            >
+                                                <div className="mb-6 p-3 rounded-2xl bg-white/20 w-fit backdrop-blur-md shadow-inner border border-white/10">
+                                                    <currentPersona.icon className="w-8 h-8" />
+                                                </div>
+
+                                                <h3 className="text-3xl md:text-4xl font-serif font-bold mb-4 leading-tight">
+                                                    {currentPersona.title}
+                                                </h3>
+
+                                                <div className="w-16 h-1 bg-white/30 rounded-full mb-6" />
+
+                                                <ul className="space-y-3">
+                                                    {currentPersona.points.map((point, index) => (
+                                                        <motion.li
+                                                            key={index}
+                                                            initial={{ opacity: 0, x: -20 }}
+                                                            animate={{ opacity: 1, x: 0 }}
+                                                            transition={{ delay: 0.3 + index * 0.1 }}
+                                                            className="flex items-start gap-3 text-base md:text-lg text-white/90 font-light"
+                                                        >
+                                                            <div className="mt-1 p-1 bg-white/20 rounded-full">
+                                                                <Check className="w-3 h-3" strokeWidth={4} />
+                                                            </div>
+                                                            <span>{point}</span>
+                                                        </motion.li>
+                                                    ))}
+                                                </ul>
+                                            </motion.div>
+                                        </div>
+                                    </div>
+
+                                    {/* Right: Form */}
+                                    <div className="lg:col-span-7 p-6 md:p-10 flex flex-col justify-center bg-white/50 backdrop-blur-sm">
+                                        <div className="max-w-md mx-auto w-full">
+                                            <div className="mb-6">
+                                                <h4 className="text-2xl md:text-3xl font-serif font-bold text-foreground mb-2">{currentPersona.formTitle}</h4>
+                                                <p className="text-foreground/60 text-base md:text-lg">{currentPersona.formDesc}</p>
+                                            </div>
+
+                                            <form onSubmit={handleSubmit} className="space-y-4">
+                                                <div className="space-y-1.5 group">
+                                                    <label className="text-sm font-bold text-foreground/80 ml-1 group-focus-within:text-primary transition-colors">Email</label>
+                                                    <input
+                                                        name="email"
+                                                        type="email"
+                                                        required
+                                                        className="w-full p-4 rounded-xl bg-white border-2 border-stone-100 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all shadow-sm group-hover:border-stone-200"
+                                                        placeholder="votre@email.com"
+                                                    />
+                                                </div>
+                                                <div className="space-y-1.5 group">
+                                                    <label className="text-sm font-bold text-foreground/80 ml-1 group-focus-within:text-primary transition-colors">Téléphone</label>
+                                                    <input
+                                                        name="phone"
+                                                        type="tel"
+                                                        required
+                                                        className="w-full p-4 rounded-xl bg-white border-2 border-stone-100 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all shadow-sm group-hover:border-stone-200"
+                                                        placeholder="06 12 34 56 78"
+                                                    />
+                                                </div>
+
+                                                <button
+                                                    type="submit"
+                                                    disabled={isSubmitting}
+                                                    className={`w-full py-4 ${currentPersona.color} text-white font-bold text-lg rounded-xl hover:brightness-110 hover:scale-[1.01] active:scale-[0.99] transition-all mt-6 flex items-center justify-center gap-3 shadow-xl ${currentPersona.shadow}`}
+                                                >
+                                                    {isSubmitting ? (
+                                                        <motion.div
+                                                            animate={{ rotate: 360 }}
+                                                            transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                                                        >
+                                                            <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full" />
+                                                        </motion.div>
+                                                    ) : (
+                                                        <>
+                                                            <span>Envoyer ma demande</span>
+                                                            <Send className="w-5 h-5" />
+                                                        </>
+                                                    )}
+                                                </button>
+
+                                                <p className="text-xs text-center text-foreground/40 mt-4">
+                                                    En envoyant ce formulaire, vous acceptez notre politique de confidentialité.
+                                                </p>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </motion.div>
+                        )}
+
+                        {/* STEP 3: SUCCESS */}
+                        {step === "success" && (
+                            <motion.div
+                                key="success"
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                className="bg-white/80 backdrop-blur-xl rounded-[3rem] shadow-2xl p-12 md:p-24 text-center max-w-2xl mx-auto border border-white/60 relative overflow-hidden"
+                            >
+                                <div className="absolute inset-0 bg-gradient-to-b from-white/0 to-green-50/50 pointer-events-none" />
+
+                                <motion.div
+                                    initial={{ scale: 0, rotate: -180 }}
+                                    animate={{ scale: 1, rotate: 0 }}
+                                    transition={{ type: "spring", damping: 15, delay: 0.2 }}
+                                    className="w-32 h-32 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-10 relative z-10"
+                                >
+                                    <Check className="w-16 h-16 text-green-600" strokeWidth={3} />
+                                </motion.div>
+
+                                <div className="relative z-10">
+                                    <h3 className="text-4xl md:text-5xl font-serif font-bold text-foreground mb-6">
+                                        Message bien reçu !
+                                    </h3>
+                                    <p className="text-xl text-foreground/60 mb-12 max-w-md mx-auto leading-relaxed">
+                                        Merci de votre intérêt. Notre équipe va étudier votre demande et vous recontactera sous 24h.
+                                    </p>
+
+                                    <button
+                                        onClick={() => {
+                                            setStep("selection");
+                                            setSelected("student");
+                                        }}
+                                        className="px-8 py-4 rounded-full bg-stone-100 text-stone-600 font-bold hover:bg-stone-200 transition-colors"
+                                    >
+                                        Retour à l'accueil
+                                    </button>
+                                </div>
+                            </motion.div>
+                        )}
+
                     </AnimatePresence>
                 </div>
             </div>
-
-            <Modal
-                isOpen={isModalOpen}
-                onClose={handleClose}
-                title={isSuccess ? " " : currentPersona.modalTitle}
-            >
-                <AnimatePresence mode="wait">
-                    {isSuccess ? (
-                        <motion.div
-                            key="success"
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.9 }}
-                            className="flex flex-col items-center justify-center py-8 text-center"
-                        >
-                            {/* Success Icon Container */}
-                            <div className="relative mb-6">
-                                {/* Animated Background Blob */}
-                                <motion.div
-                                    initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
-                                    transition={{ type: "spring", damping: 12, delay: 0.2 }}
-                                    className="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center"
-                                >
-                                    {/* Animated Checkmark */}
-                                    <motion.svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="48"
-                                        height="48"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="3"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        className="text-green-600"
-                                        initial={{ pathLength: 0, opacity: 0 }}
-                                        animate={{ pathLength: 1, opacity: 1 }}
-                                        transition={{ duration: 0.5, delay: 0.4 }}
-                                    >
-                                        <polyline points="20 6 9 17 4 12"></polyline>
-                                    </motion.svg>
-                                </motion.div>
-
-                                {/* Flying Plane (Decorative, leaving the scene) */}
-                                <motion.div
-                                    initial={{ x: 0, y: 0, opacity: 1, scale: 1 }}
-                                    animate={{
-                                        x: 100,
-                                        y: -100,
-                                        opacity: 0,
-                                        scale: 0.5,
-                                        rotate: -45
-                                    }}
-                                    transition={{ duration: 0.8, ease: "easeIn" }}
-                                    className="absolute top-0 left-0 text-primary pointer-events-none"
-                                >
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="24"
-                                        height="24"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                    >
-                                        <line x1="22" x2="11" y1="2" y2="13"></line>
-                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                                    </svg>
-                                </motion.div>
-                            </div>
-
-                            <motion.div
-                                initial={{ opacity: 0, y: 10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: 0.5 }}
-                                className="space-y-2"
-                            >
-                                <h3 className="text-2xl font-bold text-gray-900">Message envoyé !</h3>
-                                <p className="text-gray-500 max-w-xs mx-auto">
-                                    Nous avons bien reçu votre demande. <br />
-                                    Notre équipe vous recontactera sous 24h.
-                                </p>
-                            </motion.div>
-
-                            <motion.button
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 1 }}
-                                onClick={handleClose}
-                                className="mt-8 text-sm font-medium text-gray-400 hover:text-gray-600 transition-colors"
-                            >
-                                Fermer
-                            </motion.button>
-                        </motion.div>
-                    ) : (
-                        <motion.form
-                            key="form"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            onSubmit={handleSubmit}
-                            className="space-y-4"
-                        >
-                            <p className="text-foreground/80 mb-4">{currentPersona.modalDesc}</p>
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-foreground">Email</label>
-                                <input
-                                    name="email"
-                                    type="email"
-                                    required
-                                    className="w-full p-3 rounded-xl border-2 border-stone-200 focus:border-primary focus:outline-none transition-colors"
-                                    placeholder="votre@email.com"
-                                />
-                            </div>
-                            <div className="space-y-2">
-                                <label className="text-sm font-bold text-foreground">Téléphone</label>
-                                <input
-                                    name="phone"
-                                    type="tel"
-                                    required
-                                    className="w-full p-3 rounded-xl border-2 border-stone-200 focus:border-primary focus:outline-none transition-colors"
-                                    placeholder="06 12 34 56 78"
-                                />
-                            </div>
-                            <button
-                                type="submit"
-                                disabled={isSubmitting}
-                                className="w-full py-3 bg-primary text-white font-bold rounded-xl hover:bg-secondary transition-all mt-4 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group overflow-hidden relative"
-                            >
-                                <span className={`transition-transform duration-300 ${isSubmitting ? '-translate-y-10' : 'translate-y-0'}`}>
-                                    Envoyer
-                                </span>
-                                {isSubmitting && (
-                                    <div className="absolute inset-0 flex items-center justify-center">
-                                        <motion.div
-                                            animate={{ rotate: 360 }}
-                                            transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                                        >
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                                <path d="M21 12a9 9 0 1 1-6.219-8.56" />
-                                            </svg>
-                                        </motion.div>
-                                    </div>
-                                )}
-                                {!isSubmitting && (
-                                    <svg
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        width="20"
-                                        height="20"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        strokeWidth="2"
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        className="group-hover:-translate-y-1 group-hover:translate-x-1 transition-transform"
-                                    >
-                                        <line x1="22" x2="11" y1="2" y2="13"></line>
-                                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                                    </svg>
-                                )}
-                            </button>
-                        </motion.form>
-                    )}
-                </AnimatePresence>
-            </Modal>
         </section>
     );
 }
+

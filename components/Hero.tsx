@@ -41,7 +41,7 @@ export default function Hero() {
             y: 0,
             transition: {
                 duration: 0.8,
-                ease: [0.25, 0.1, 0.25, 1.0],
+                ease: [0.25, 0.1, 0.25, 1.0] as const,
             },
         },
     };
@@ -51,9 +51,9 @@ export default function Hero() {
             ref={containerRef}
             className="relative min-h-[300vh] bg-[#FFF2E0]"
         >
-            <div className="sticky top-0 h-screen w-full overflow-hidden">
-                <div className="relative flex h-full items-center justify-center px-4 py-20 md:px-6">
-                    <div className="container relative z-10 mx-auto grid max-w-6xl gap-12 md:grid-cols-2 md:items-center pb-20">
+            <div className="sticky top-20 h-[calc(100vh-5rem)] w-full overflow-hidden">
+                <div className="relative flex h-full items-center justify-center px-4 md:px-6">
+                    <div className="container relative z-10 mx-auto grid max-w-6xl gap-12 md:grid-cols-2 md:items-center">
 
                         {/* Left Column: Text */}
                         <motion.div
