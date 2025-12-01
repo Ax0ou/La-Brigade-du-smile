@@ -8,20 +8,20 @@ import { motion, useScroll, useTransform } from "framer-motion";
 export default function Navbar() {
     const { scrollY } = useScroll();
 
-    // Scroll threshold: curtain stays until 200px, then lifts quickly
+    // Scroll threshold: curtain stays until 200px, then lifts slowly over 600px
     const curtainY = useTransform(
         scrollY,
-        [0, 200, 400],
+        [0, 200, 800],
         ["0%", "0%", "-100%"]
     );
 
     // Logo animations
-    const logoScale = useTransform(scrollY, [0, 400], [5, 1]);
-    const heroLogoOpacity = useTransform(scrollY, [0, 200, 400], [1, 1, 0]);
-    const navbarLogoOpacity = useTransform(scrollY, [200, 400], [0, 1]);
+    const logoScale = useTransform(scrollY, [0, 800], [5, 1]);
+    const heroLogoOpacity = useTransform(scrollY, [0, 200, 800], [1, 1, 0]);
+    const navbarLogoOpacity = useTransform(scrollY, [200, 800], [0, 1]);
 
     // Nav items opacity
-    const navItemsOpacity = useTransform(scrollY, [200, 400], [0, 1]);
+    const navItemsOpacity = useTransform(scrollY, [200, 800], [0, 1]);
 
     // Scroll indicator opacity (fades out when scrolling starts)
     const scrollIndicatorOpacity = useTransform(scrollY, [0, 100], [1, 0]);
@@ -33,7 +33,7 @@ export default function Navbar() {
                 className="fixed inset-0 bg-[#C0C9EE] z-[45]"
                 style={{
                     y: curtainY,
-                    pointerEvents: useTransform(scrollY, [300, 400], ["auto", "none"] as any)
+                    pointerEvents: useTransform(scrollY, [700, 800], ["auto", "none"] as any)
                 }}
             >
                 {/* Scroll Indicator */}
@@ -92,7 +92,7 @@ export default function Navbar() {
                 <motion.div
                     className="absolute inset-0 bg-[#C0C9EE]/80 backdrop-blur-md -z-10"
                     style={{
-                        opacity: useTransform(scrollY, [350, 450], [0, 1])
+                        opacity: useTransform(scrollY, [750, 850], [0, 1])
                     }}
                 />
 
@@ -141,9 +141,9 @@ export default function Navbar() {
                         className="flex-1 flex justify-end items-center"
                         style={{ opacity: navItemsOpacity }}
                     >
-                        <button className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-secondary transition-colors">
+                        <a href="mailto:roussel.agathe0@gmail.com" className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-secondary transition-colors">
                             Contact
-                        </button>
+                        </a>
                     </motion.div>
                 </div>
             </nav>

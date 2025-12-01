@@ -39,11 +39,11 @@ const personas = {
         id: "family",
         label: "Trouver un compagnon",
         icon: Users,
-        color: "bg-secondary",
-        text: "text-secondary",
-        border: "border-secondary",
-        shadow: "shadow-secondary/30",
-        gradient: "from-secondary/20 to-secondary/5",
+        color: "bg-accent-yellow",
+        text: "text-accent-yellow",
+        border: "border-accent-yellow",
+        shadow: "shadow-accent-yellow/30",
+        gradient: "from-accent-yellow/20 to-accent-yellow/5",
         title: "Offrez un compagnon de confiance",
         description: "Une présence bienveillante et stimulante pour vos proches, assurée par des jeunes sélectionnés.",
         points: [
@@ -138,7 +138,10 @@ export default function PersonaSelector() {
     };
 
     return (
-        <section ref={sectionRef} id="persona-selector" className="py-24 px-4 md:px-6 container mx-auto min-h-[800px] flex flex-col justify-center relative">
+        <section ref={sectionRef} id="persona-selector" className="py-10 px-4 md:px-6 container mx-auto min-h-[800px] flex flex-col justify-center relative">
+            {/* Navigation Anchors */}
+            <div id="devenir-compagnon" className="absolute -top-24 left-0 w-full h-0 pointer-events-none" />
+            <div id="trouver-compagnon" className="absolute -top-24 left-0 w-full h-0 pointer-events-none" />
             {/* Background Elements */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.8)_0%,rgba(255,255,255,0)_70%)] pointer-events-none -z-10" />
 

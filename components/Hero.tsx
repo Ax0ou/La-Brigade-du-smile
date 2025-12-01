@@ -8,6 +8,9 @@ import MagneticButton from "@/components/ui/MagneticButton";
 import TextReveal from "@/components/ui/TextReveal";
 
 export default function Hero() {
+    const { scrollY } = useScroll();
+    const highlightScale = useTransform(scrollY, [800, 1000], [0, 1]);
+
     const containerRef = useRef(null);
     const { scrollYProgress } = useScroll({
         target: containerRef,
@@ -51,7 +54,7 @@ export default function Hero() {
     return (
         <section
             ref={containerRef}
-            className="relative min-h-[300vh] bg-[#FFF2E0]"
+            className="relative min-h-[200vh] bg-[#FFF2E0]"
         >
             <div className="sticky top-20 h-[calc(100vh-5rem)] w-full overflow-hidden">
                 <div className="relative flex h-full items-center justify-center px-4 md:px-6">
@@ -66,14 +69,12 @@ export default function Hero() {
                         >
                             <motion.div variants={itemVariants}>
                                 <h1 className="font-serif text-5xl font-bold leading-tight tracking-tight text-foreground md:text-7xl">
-                                    <TextReveal className="inline-block">En mission pour relier les</TextReveal>{" "}
+                                    <TextReveal>En mission pour relier les</TextReveal>{" "}
                                     <span className="relative inline-block">
                                         <span className="relative z-10">générations</span>
                                         <motion.span
-                                            initial={{ scaleX: 0 }}
-                                            animate={{ scaleX: 1 }}
-                                            transition={{ duration: 1.0, delay: 1.0, ease: "easeOut" }}
-                                            className="absolute bottom-1 left-0 -z-10 h-[0.6em] w-full origin-left -rotate-1 rounded-sm bg-[#C0C9EE]"
+                                            style={{ scaleX: highlightScale }}
+                                            className="absolute bottom-0 -left-[5%] -z-10 h-[0.6em] w-[110%] origin-left -rotate-2 rounded-sm bg-[#C0C9EE]"
                                         />
                                     </span>
                                 </h1>
@@ -110,7 +111,13 @@ export default function Hero() {
                                 transition={{ duration: 1.0, delay: 0.2, ease: "easeOut" }}
                                 className="relative h-full w-full"
                             >
-                                <div
+                                <motion.div
+                                    animate={{ y: [0, -15, 0] }}
+                                    transition={{
+                                        duration: 6,
+                                        repeat: Infinity,
+                                        ease: "easeInOut",
+                                    }}
                                     className="relative h-full w-full overflow-hidden shadow-2xl"
                                     style={{ borderRadius: "60% 40% 30% 70% / 60% 30% 70% 40%" }}
                                 >
@@ -123,7 +130,7 @@ export default function Hero() {
                                             priority
                                         />
                                     </div>
-                                </div>
+                                </motion.div>
                             </motion.div>
 
                             {/* Second Overlapping Image */}
@@ -134,7 +141,14 @@ export default function Hero() {
                                 transition={{ duration: 1.0, delay: 0.5, ease: "easeOut" }}
                                 className="absolute -bottom-12 -right-12 h-48 w-48 md:h-64 md:w-64"
                             >
-                                <div
+                                <motion.div
+                                    animate={{ y: [0, -10, 0] }}
+                                    transition={{
+                                        duration: 5,
+                                        delay: 1, // Offset for organic feel
+                                        repeat: Infinity,
+                                        ease: "easeInOut",
+                                    }}
                                     className="relative h-full w-full overflow-hidden shadow-xl"
                                     style={{ borderRadius: "40% 60% 70% 30% / 40% 50% 60% 50%" }}
                                 >
@@ -146,27 +160,12 @@ export default function Hero() {
                                             className="object-cover"
                                         />
                                     </div>
-                                </div>
+                                </motion.div>
                             </motion.div>
                         </div>
 
                     </div>
 
-                    {/* Wavy Divider */}
-                    <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-[0]">
-                        <svg
-                            className="relative block w-[calc(100%+1.3px)] h-[60px] md:h-[120px]"
-                            data-name="Layer 1"
-                            xmlns="http://www.w3.org/2000/svg"
-                            viewBox="0 0 1200 120"
-                            preserveAspectRatio="none"
-                        >
-                            <path
-                                d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z"
-                                className="fill-white"
-                            ></path>
-                        </svg>
-                    </div>
                 </div>
             </div>
         </section>

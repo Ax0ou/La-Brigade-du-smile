@@ -11,7 +11,7 @@ export default function Footer() {
                     <div className="mb-4">
                         <Image
                             src="/Lbds_logo.svg"
-                            alt="La Brigade du Sourire"
+                            alt="La Brigade du Smile"
                             width={150}
                             height={150}
                             className="brightness-0 invert opacity-90" // Making it white for the dark footer
@@ -20,26 +20,12 @@ export default function Footer() {
                     <p className="text-sm opacity-80">Relier les générations, un sourire à la fois.</p>
                 </div>
 
-                <div className="flex gap-6">
-                    <Link href="#" className="hover:text-primary transition-colors">
-                        <Instagram className="w-6 h-6" />
-                    </Link>
-                    <Link href="#" className="hover:text-primary transition-colors">
-                        <Facebook className="w-6 h-6" />
-                    </Link>
-                    <Link href="#" className="hover:text-primary transition-colors">
-                        <Linkedin className="w-6 h-6" />
-                    </Link>
-                </div>
-
                 <div className="flex gap-6 text-sm opacity-80">
-                    <Link href="#" className="hover:text-primary transition-colors">Mentions légales</Link>
-                    <Link href="#" className="hover:text-primary transition-colors">Confidentialité</Link>
-                    <Link href="#" className="hover:text-primary transition-colors">Contact</Link>
+                    <Link href="mailto:roussel.agathe0@gmail.com" className="hover:text-primary transition-colors">Contact</Link>
                 </div>
             </div>
             <div className="container mx-auto mt-8 pt-8 border-t border-white/10 text-center text-xs opacity-60">
-                © {new Date().getFullYear()} La Brigade du Sourire. Tous droits réservés.
+                © {new Date().getFullYear()} La Brigade du Smile. Tous droits réservés.
             </div>
         </footer>
     );
