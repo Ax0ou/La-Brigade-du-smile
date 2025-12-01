@@ -4,6 +4,8 @@ import { motion, useScroll, useTransform } from "framer-motion";
 import { ArrowDown } from "lucide-react";
 import Image from "next/image";
 import { useRef } from "react";
+import MagneticButton from "@/components/ui/MagneticButton";
+import TextReveal from "@/components/ui/TextReveal";
 
 export default function Hero() {
     const containerRef = useRef(null);
@@ -64,7 +66,7 @@ export default function Hero() {
                         >
                             <motion.div variants={itemVariants}>
                                 <h1 className="font-serif text-5xl font-bold leading-tight tracking-tight text-foreground md:text-7xl">
-                                    En mission pour relier les{" "}
+                                    <TextReveal className="inline-block">En mission pour relier les</TextReveal>{" "}
                                     <span className="relative inline-block">
                                         <span className="relative z-10">générations</span>
                                         <motion.span
@@ -87,13 +89,15 @@ export default function Hero() {
                             </motion.div>
 
                             <motion.div variants={itemVariants}>
-                                <button
-                                    onClick={scrollToPersona}
-                                    className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-primary px-8 py-4 text-lg font-bold text-white shadow-lg transition-all hover:bg-secondary hover:scale-105 active:scale-95"
-                                >
-                                    <span>Join the Brigade !</span>
-                                    <ArrowDown className="h-5 w-5 transition-transform group-hover:translate-y-1" />
-                                </button>
+                                <MagneticButton strength={0.3} className="inline-block">
+                                    <button
+                                        onClick={scrollToPersona}
+                                        className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-primary px-8 py-4 text-lg font-bold text-white shadow-lg transition-all hover:bg-secondary hover:scale-105 active:scale-95"
+                                    >
+                                        <span>Join the Brigade !</span>
+                                        <ArrowDown className="h-5 w-5 transition-transform group-hover:translate-y-1" />
+                                    </button>
+                                </MagneticButton>
                             </motion.div>
                         </motion.div>
 

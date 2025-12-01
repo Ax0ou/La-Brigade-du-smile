@@ -14,6 +14,8 @@ const dmSans = DM_Sans({
   display: "swap",
 });
 
+import NoiseOverlay from "@/components/ui/NoiseOverlay";
+
 export const metadata: Metadata = {
   title: "La Brigade du Sourire",
   description: "Relier les générations : étudiants et seniors.",
@@ -30,6 +32,7 @@ export default function RootLayout({
         suppressHydrationWarning
         className={`${fraunces.variable} ${dmSans.variable} antialiased font-sans`}
       >
+        <NoiseOverlay />
         {children}
       </body>
     </html>

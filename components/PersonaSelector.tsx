@@ -3,6 +3,12 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, User, Users, Building2, ArrowLeft, Send, Sparkles } from "lucide-react";
+import MagneticButton from "@/components/ui/MagneticButton";
+import TextReveal from "@/components/ui/TextReveal";
+
+// ... (inside component)
+
+
 
 type PersonaType = "student" | "family" | "pro";
 type Step = "selection" | "details" | "success";
@@ -152,7 +158,7 @@ export default function PersonaSelector() {
                                 <span>Une expérience sur-mesure</span>
                             </div>
                             <h2 className="text-5xl md:text-6xl font-serif font-bold text-foreground tracking-tight">
-                                Quelle est votre <span className="italic text-primary">mission</span> ?
+                                <TextReveal>Quelle est votre mission ?</TextReveal>
                             </h2>
                             <p className="text-xl text-foreground/60 max-w-2xl mx-auto font-light">
                                 Sélectionnez le profil qui vous correspond pour découvrir comment nous pouvons avancer ensemble.
@@ -309,25 +315,27 @@ export default function PersonaSelector() {
                                                     />
                                                 </div>
 
-                                                <button
-                                                    type="submit"
-                                                    disabled={isSubmitting}
-                                                    className={`w-full py-4 ${currentPersona.color} text-white font-bold text-lg rounded-xl hover:brightness-110 hover:scale-[1.01] active:scale-[0.99] transition-all mt-6 flex items-center justify-center gap-3 shadow-xl ${currentPersona.shadow}`}
-                                                >
-                                                    {isSubmitting ? (
-                                                        <motion.div
-                                                            animate={{ rotate: 360 }}
-                                                            transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
-                                                        >
-                                                            <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full" />
-                                                        </motion.div>
-                                                    ) : (
-                                                        <>
-                                                            <span>Envoyer ma demande</span>
-                                                            <Send className="w-5 h-5" />
-                                                        </>
-                                                    )}
-                                                </button>
+                                                <MagneticButton className="w-full">
+                                                    <button
+                                                        type="submit"
+                                                        disabled={isSubmitting}
+                                                        className={`w-full py-4 ${currentPersona.color} text-white font-bold text-lg rounded-xl hover:brightness-110 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-3 shadow-xl ${currentPersona.shadow}`}
+                                                    >
+                                                        {isSubmitting ? (
+                                                            <motion.div
+                                                                animate={{ rotate: 360 }}
+                                                                transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
+                                                            >
+                                                                <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full" />
+                                                            </motion.div>
+                                                        ) : (
+                                                            <>
+                                                                <span>Envoyer ma demande</span>
+                                                                <Send className="w-5 h-5" />
+                                                            </>
+                                                        )}
+                                                    </button>
+                                                </MagneticButton>
 
                                                 <p className="text-xs text-center text-foreground/40 mt-4">
                                                     En envoyant ce formulaire, vous acceptez notre politique de confidentialité.

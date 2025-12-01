@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { HeartHandshake, BrainCircuit, Hammer, Sparkles } from "lucide-react";
+import TextReveal from "@/components/ui/TextReveal";
 
 const pillars = [
     {
@@ -60,7 +61,7 @@ export default function ValueProps() {
                         transition={{ delay: 0.1 }}
                         className="text-4xl md:text-5xl font-serif font-bold text-foreground"
                     >
-                        Plus qu'un service, <span className="italic text-primary">une relation</span>
+                        <TextReveal>Plus qu'un service,</TextReveal> <span className="italic text-primary">une relation</span>
                     </motion.h2>
                 </div>
 
