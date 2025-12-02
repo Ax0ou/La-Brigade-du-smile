@@ -30,7 +30,7 @@ export default function RootLayout({
     <html lang="fr">
       <body
         suppressHydrationWarning
-        className={`${fraunces.variable} ${dmSans.variable} antialiased font-sans`}
+        className={`${fraunces.variable} ${dmSans.variable} antialiased font-sans overflow-x-hidden`}
       >
         <NoiseOverlay />
         {children}

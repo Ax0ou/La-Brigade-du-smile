@@ -26,10 +26,22 @@ const personas = {
         title: "Complétez vos revenus en créant du lien",
         description: "Rejoignez une communauté de jeunes engagés et vivez une expérience humaine unique.",
         points: [
-            "Jobs flexibles et gratifiants",
-            "Missions adaptées à votre emploi du temps",
-            "Impact social concret",
-            "Communauté active et bienveillante",
+            {
+                title: "Complète tes revenus",
+                desc: "Finis les jobs étudiants non gratifiants : complètes tes revenus selon ton emploi du temps tout en aidant les autres."
+            },
+            {
+                title: "Choisis tes missions selon tes disponibilités",
+                desc: "Travaille quand tu peux selon ton emploi du temps et tes envies."
+            },
+            {
+                title: "Crée du lien, fais la différence",
+                desc: "Participe à l’amélioration de notre monde : crée du lien avec nos ainés ! Tu verras ils t’apporteront tout autant que tu leur rapportes."
+            },
+            {
+                title: "Rejoins la communauté",
+                desc: "Des jeunes engagés qui partagent des valeurs communes. Nous faisons le maximum pour t’associer à un senior qui partage tes passions."
+            }
         ],
         cta: "Rejoindre l'aventure",
         formTitle: "C'est parti !",
@@ -194,7 +206,7 @@ export default function PersonaSelector() {
                                             transition={{ delay: index * 0.1 }}
                                             whileHover={{ y: -12, scale: 1.02 }}
                                             whileTap={{ scale: 0.98 }}
-                                            className={`group relative flex flex-col p-8 rounded-[2rem] bg-white/40 backdrop-blur-xl border border-white/60 hover:border-white shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden text-left h-full ${persona.shadow}`}
+                                            className={`group relative flex flex-col p-8 rounded-[2rem] bg-white/40 backdrop-blur-xl border border-white/60 hover:border-white shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden text-left h-full ${persona.shadow} cursor-pointer`}
                                         >
                                             {/* Gradient Background on Hover */}
                                             <div className={`absolute inset-0 bg-gradient-to-br ${persona.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
@@ -235,19 +247,28 @@ export default function PersonaSelector() {
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: 40 }}
                                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                                className="bg-white/60 backdrop-blur-2xl rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/50 relative"
+                                className="bg-white/60 backdrop-blur-2xl rounded-[2rem] md:rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/50 relative"
                             >
-                                <div className="grid lg:grid-cols-12 min-h-[500px]">
-                                    {/* Left: Details */}
-                                    <div className={`lg:col-span-5 p-6 md:p-10 ${currentPersona.color} text-white flex flex-col justify-between relative overflow-hidden`}>
+                                {/* Absolute Back Button - Always visible top-left */}
+                                <button
+                                    onClick={handleBack}
+                                    className="absolute top-4 left-4 z-30 flex items-center justify-center w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white shadow-lg hover:bg-white/30 transition-all cursor-pointer lg:hidden"
+                                >
+                                    <ArrowLeft className="w-5 h-5" />
+                                </button>
+
+                                <div className="flex flex-col-reverse lg:grid lg:grid-cols-12 min-h-[400px]">
+                                    {/* Left: Details (Bottom on Mobile) */}
+                                    <div className={`lg:col-span-5 p-6 md:p-8 ${currentPersona.color} text-white flex flex-col justify-between relative overflow-hidden`}>
                                         {/* Abstract Shapes */}
                                         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl" />
                                         <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/5 rounded-full translate-y-1/3 -translate-x-1/3 blur-2xl" />
 
                                         <div className="relative z-10">
+                                            {/* Desktop Back Button */}
                                             <button
                                                 onClick={handleBack}
-                                                className="flex items-center gap-2 text-white/80 hover:text-white transition-colors mb-8 group bg-white/10 w-fit px-3 py-1.5 rounded-full backdrop-blur-sm hover:bg-white/20"
+                                                className="hidden lg:flex items-center gap-2 text-white/80 hover:text-white transition-colors mb-6 group bg-white/10 w-fit px-3 py-1.5 rounded-full backdrop-blur-sm hover:bg-white/20 cursor-pointer"
                                             >
                                                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                                                 <span className="text-sm font-medium">Retour</span>
@@ -258,29 +279,37 @@ export default function PersonaSelector() {
                                                 animate={{ opacity: 1, x: 0 }}
                                                 transition={{ delay: 0.2 }}
                                             >
-                                                <div className="mb-6 p-3 rounded-2xl bg-white/20 w-fit backdrop-blur-md shadow-inner border border-white/10">
-                                                    <currentPersona.icon className="w-8 h-8" />
+                                                <div className="mb-4 p-2.5 rounded-2xl bg-white/20 w-fit backdrop-blur-md shadow-inner border border-white/10 hidden lg:block">
+                                                    <currentPersona.icon className="w-6 h-6" />
                                                 </div>
 
-                                                <h3 className="text-3xl md:text-4xl font-serif font-bold mb-4 leading-tight">
+                                                <h3 className="text-2xl md:text-3xl font-serif font-bold mb-3 leading-tight mt-4 lg:mt-0">
                                                     {currentPersona.title}
                                                 </h3>
 
-                                                <div className="w-16 h-1 bg-white/30 rounded-full mb-6" />
+                                                <div className="w-12 h-1 bg-white/30 rounded-full mb-4" />
 
                                                 <ul className="space-y-3">
-                                                    {currentPersona.points.map((point, index) => (
+                                                    {currentPersona.points.map((point: any, index: number) => (
                                                         <motion.li
                                                             key={index}
                                                             initial={{ opacity: 0, x: -20 }}
                                                             animate={{ opacity: 1, x: 0 }}
                                                             transition={{ delay: 0.3 + index * 0.1 }}
-                                                            className="flex items-start gap-3 text-base md:text-lg text-white/90 font-light"
+                                                            className="flex items-start gap-3 text-sm md:text-base text-white/90 font-light"
                                                         >
-                                                            <div className="mt-1 p-1 bg-white/20 rounded-full">
+                                                            <div className="mt-1 p-1 bg-white/20 rounded-full shrink-0">
                                                                 <Check className="w-3 h-3" strokeWidth={4} />
                                                             </div>
-                                                            <span>{point}</span>
+
+                                                            {typeof point === 'string' ? (
+                                                                <span>{point}</span>
+                                                            ) : (
+                                                                <div className="flex flex-col gap-0.5">
+                                                                    <span className="font-bold text-white text-sm md:text-base leading-tight">{point.title}</span>
+                                                                    <span className="text-white/80 text-xs md:text-sm leading-relaxed">{point.desc}</span>
+                                                                </div>
+                                                            )}
                                                         </motion.li>
                                                     ))}
                                                 </ul>
@@ -288,59 +317,59 @@ export default function PersonaSelector() {
                                         </div>
                                     </div>
 
-                                    {/* Right: Form */}
-                                    <div className="lg:col-span-7 p-6 md:p-10 flex flex-col justify-center bg-white/50 backdrop-blur-sm">
+                                    {/* Right: Form (Top on Mobile) */}
+                                    <div className="lg:col-span-7 p-5 md:p-8 flex flex-col justify-center bg-white/50 backdrop-blur-sm pt-14 lg:pt-8">
                                         <div className="max-w-md mx-auto w-full">
-                                            <div className="mb-6">
-                                                <h4 className="text-2xl md:text-3xl font-serif font-bold text-foreground mb-2">{currentPersona.formTitle}</h4>
-                                                <p className="text-foreground/60 text-base md:text-lg">{currentPersona.formDesc}</p>
+                                            <div className="mb-4 text-center lg:text-left">
+                                                <h4 className="text-xl md:text-2xl font-serif font-bold text-foreground mb-1">{currentPersona.formTitle}</h4>
+                                                <p className="text-foreground/60 text-sm md:text-base">{currentPersona.formDesc}</p>
                                             </div>
 
-                                            <form onSubmit={handleSubmit} className="space-y-4">
-                                                <div className="space-y-1.5 group">
-                                                    <label className="text-sm font-bold text-foreground/80 ml-1 group-focus-within:text-primary transition-colors">Email</label>
+                                            <form onSubmit={handleSubmit} className="space-y-3">
+                                                <div className="space-y-1 group text-left">
+                                                    <label className="text-xs font-bold text-foreground/80 ml-1 group-focus-within:text-primary transition-colors">Email</label>
                                                     <input
                                                         name="email"
                                                         type="email"
                                                         required
-                                                        className="w-full p-4 rounded-xl bg-white border-2 border-stone-100 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all shadow-sm group-hover:border-stone-200"
+                                                        className="w-full p-3 rounded-xl bg-white border-2 border-stone-100 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all shadow-sm group-hover:border-stone-200 text-sm"
                                                         placeholder="votre@email.com"
                                                     />
                                                 </div>
-                                                <div className="space-y-1.5 group">
-                                                    <label className="text-sm font-bold text-foreground/80 ml-1 group-focus-within:text-primary transition-colors">Téléphone</label>
+                                                <div className="space-y-1 group text-left">
+                                                    <label className="text-xs font-bold text-foreground/80 ml-1 group-focus-within:text-primary transition-colors">Téléphone</label>
                                                     <input
                                                         name="phone"
                                                         type="tel"
                                                         required
-                                                        className="w-full p-4 rounded-xl bg-white border-2 border-stone-100 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all shadow-sm group-hover:border-stone-200"
+                                                        className="w-full p-3 rounded-xl bg-white border-2 border-stone-100 focus:border-primary/50 focus:ring-4 focus:ring-primary/10 focus:outline-none transition-all shadow-sm group-hover:border-stone-200 text-sm"
                                                         placeholder="06 12 34 56 78"
                                                     />
                                                 </div>
 
-                                                <MagneticButton className="w-full">
+                                                <MagneticButton className="w-full pt-2">
                                                     <button
                                                         type="submit"
                                                         disabled={isSubmitting}
-                                                        className={`w-full py-4 ${currentPersona.color} text-white font-bold text-lg rounded-xl hover:brightness-110 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-3 shadow-xl ${currentPersona.shadow}`}
+                                                        className={`w-full py-3 ${currentPersona.color} text-white font-bold text-base rounded-xl hover:brightness-110 hover:scale-[1.01] active:scale-[0.99] transition-all flex items-center justify-center gap-3 shadow-xl ${currentPersona.shadow} cursor-pointer`}
                                                     >
                                                         {isSubmitting ? (
                                                             <motion.div
                                                                 animate={{ rotate: 360 }}
                                                                 transition={{ repeat: Infinity, duration: 1, ease: "linear" }}
                                                             >
-                                                                <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full" />
+                                                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full" />
                                                             </motion.div>
                                                         ) : (
                                                             <>
                                                                 <span>Envoyer ma demande</span>
-                                                                <Send className="w-5 h-5" />
+                                                                <Send className="w-4 h-4" />
                                                             </>
                                                         )}
                                                     </button>
                                                 </MagneticButton>
 
-                                                <p className="text-xs text-center text-foreground/40 mt-4">
+                                                <p className="text-[10px] text-center text-foreground/40 mt-3">
                                                     En envoyant ce formulaire, vous acceptez notre politique de confidentialité.
                                                 </p>
                                             </form>

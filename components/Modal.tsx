@@ -45,7 +45,7 @@ export default function Modal({ isOpen, onClose, title, children }: ModalProps) 
                                 <h3 className="text-xl font-serif font-bold text-primary">{title}</h3>
                                 <button
                                     onClick={onClose}
-                                    className="rounded-full p-2 hover:bg-primary/10 transition-colors"
+                                    className="rounded-full p-2 hover:bg-primary/10 transition-colors cursor-pointer"
                                 >
                                     <X className="h-5 w-5 text-foreground" />
                                 </button>

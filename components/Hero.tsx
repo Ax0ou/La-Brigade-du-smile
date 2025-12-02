@@ -93,7 +93,7 @@ export default function Hero() {
                                 <MagneticButton strength={0.3} className="inline-block">
                                     <button
                                         onClick={scrollToPersona}
-                                        className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-primary px-8 py-4 text-lg font-bold text-white shadow-lg transition-all hover:bg-secondary hover:scale-105 active:scale-95"
+                                        className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-primary px-8 py-4 text-lg font-bold text-white shadow-lg transition-all hover:bg-secondary hover:scale-105 active:scale-95 cursor-pointer"
                                     >
                                         <span>Join the Brigade !</span>
                                         <ArrowDown className="h-5 w-5 transition-transform group-hover:translate-y-1" />
