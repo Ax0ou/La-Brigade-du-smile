@@ -8,176 +8,52 @@ import { motion, useScroll, useTransform } from "framer-motion";
 export default function Navbar() {
     const { scrollY } = useScroll();
 
-    // Desktop: curtain lifts sooner and fades to fully reveal hero
-    const curtainY = useTransform(
-        scrollY,
-        [0, 150, 450],
-        ["0%", "0%", "-100%"]
-    );
-    const curtainOpacity = useTransform(scrollY, [0, 150, 450], [1, 1, 0]);
-
-
-    // Logo animations
-    const logoScale = useTransform(scrollY, [0, 600], [2.5, 1]);
-    const heroLogoOpacity = useTransform(scrollY, [0, 100, 600], [1, 1, 0]);
-    const navbarLogoOpacity = useTransform(scrollY, [100, 600], [0, 1]);
-
-    // Nav items opacity
-    const navItemsOpacity = useTransform(scrollY, [100, 600], [0, 1]);
-
-    // Scroll indicator opacity (fades out when scrolling starts)
-    const scrollIndicatorOpacity = useTransform(scrollY, [0, 100], [1, 0]);
-
     return (
-        <>
-            {/* Violet "curtain" that stays until scroll threshold */}
-            {/* Mobile Curtain: Quick Fade */}
-            <motion.div
-                className="fixed inset-0 bg-[#C0C9EE] z-[45] md:hidden"
-                style={{
-                    opacity: curtainOpacity,
-                    pointerEvents: useTransform<string>(scrollY, [150, 200], ["auto", "none"])
-                }}
-            />
+        <nav className="fixed top-0 left-0 right-0 z-[100] w-full">
+            {/* Navbar background - always visible with blur */}
+            <div className="absolute inset-0 bg-[#C0C9EE]/80 backdrop-blur-md -z-10" />
 
-            {/* Desktop Curtain: Lifts Up */}
-            <motion.div
-                className="fixed inset-0 bg-[#C0C9EE] z-[45] hidden md:block"
-                style={{
-                    y: curtainY,
-                    pointerEvents: useTransform<string>(scrollY, [350, 450], ["auto", "none"])
-                }}
-            >
-                {/* Scroll Indicator */}
-                <motion.div
-                    className="absolute bottom-24 md:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-foreground/60"
-                    style={{ opacity: scrollIndicatorOpacity }}
-                >
-                    <span className="text-sm font-medium">Scroll pour découvrir</span>
-                    <motion.div
-                        animate={{
-                            y: [0, 10, 0]
-                        }}
-                        transition={{
-                            duration: 1.5,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                        }}
-                    >
-                        <svg
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
+            <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
+
+                {/* Left: Navigation Links */}
+                <div className="flex-1 hidden md:flex justify-start items-center">
+                    <div className="hidden md:flex items-center gap-6">
+                        <Link
+                            href="#devenir-compagnon"
+                            className="text-sm font-medium text-foreground transition-colors"
                         >
-                            <path d="M12 5v14M19 12l-7 7-7-7" />
-                        </svg>
-                    </motion.div>
-                </motion.div>
-            </motion.div>
-
-            {/* Hero Logo - Centered on screen */}
-            {/* Mobile Hero Logo - Fades with curtain */}
-            <motion.div
-                className="fixed inset-0 flex md:hidden items-center justify-center z-[60] pointer-events-none"
-                style={{
-                    opacity: curtainOpacity,
-                    scale: logoScale,
-                }}
-            >
-                <Image
-                    src="/Lbds_logo.svg"
-                    alt="La Brigade du Smile"
-                    width={200}
-                    height={200}
-                    className="w-auto h-16 object-contain"
-                    priority
-                />
-            </motion.div>
-
-            {/* Desktop Hero Logo - Standard animation */}
-            <motion.div
-                className="fixed inset-0 hidden md:flex items-center justify-center z-[60] pointer-events-none"
-                style={{
-                    opacity: heroLogoOpacity,
-                    scale: logoScale,
-                }}
-            >
-                <Image
-                    src="/Lbds_logo.svg"
-                    alt="La Brigade du Smile"
-                    width={200}
-                    height={200}
-                    className="w-auto h-32 object-contain"
-                    priority
-                />
-            </motion.div>
-
-            {/* Navbar */}
-            <nav className="sticky top-0 z-50 w-full">
-                {/* Animated navbar background - only appears after curtain lifts */}
-                <motion.div
-                    className="absolute inset-0 bg-[#C0C9EE]/80 backdrop-blur-md -z-10"
-                    style={{
-                        opacity: useTransform(scrollY, [750, 850], [0, 1])
-                    }}
-                />
-
-                <div className="container mx-auto flex h-20 items-center justify-between px-4 md:px-6">
-
-                    {/* Left: Navigation Links */}
-                    <motion.div
-                        className="flex-1 hidden md:flex justify-start items-center"
-                        style={{ opacity: navItemsOpacity }}
-                    >
-                        <div className="hidden md:flex items-center gap-6">
-                            <Link
-                                href="#devenir-compagnon"
-                                className="text-sm font-medium text-foreground transition-colors"
-                            >
-                                <WavyText text="Devenir compagnon" />
-                            </Link>
-                            <Link
-                                href="#trouver-compagnon"
-                                className="text-sm font-medium text-foreground transition-colors"
-                            >
-                                <WavyText text="Trouver un compagnon" />
-                            </Link>
-                        </div>
-                    </motion.div>
-
-                    {/* Center: Navbar Logo (appears on scroll) */}
-                    <motion.div
-                        className="flex items-center justify-center"
-                        style={{ opacity: navbarLogoOpacity }}
-                    >
-                        <Link href="/" className="flex items-center">
-                            <Image
-                                src="/Lbds_logo.svg"
-                                alt="La Brigade du Smile"
-                                width={120}
-                                height={40}
-                                className="h-10 w-auto object-contain"
-                                priority
-                            />
+                            <WavyText text="Devenir compagnon" />
                         </Link>
-                    </motion.div>
-
-                    {/* Right: Contact CTA */}
-                    <motion.div
-                        className="flex-1 flex justify-end items-center"
-                        style={{ opacity: navItemsOpacity }}
-                    >
-                        <a href="mailto:roussel.agathe0@gmail.com" className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-secondary transition-colors">
-                            Contact
-                        </a>
-                    </motion.div>
+                        <Link
+                            href="#trouver-compagnon"
+                            className="text-sm font-medium text-foreground transition-colors"
+                        >
+                            <WavyText text="Trouver un compagnon" />
+                        </Link>
+                    </div>
                 </div>
-            </nav>
-        </>
+
+                {/* Center: Navbar Logo */}
+                <div className="flex items-center justify-center">
+                    <Link href="/" className="flex items-center">
+                        <Image
+                            src="/Lbds_logo.svg"
+                            alt="La Brigade du Smile"
+                            width={120}
+                            height={40}
+                            className="h-10 w-auto object-contain"
+                            priority
+                        />
+                    </Link>
+                </div>
+
+                {/* Right: Contact CTA */}
+                <div className="flex-1 flex justify-end items-center">
+                    <a href="mailto:roussel.agathe0@gmail.com" className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-secondary transition-colors">
+                        Contact
+                    </a>
+                </div>
+            </div>
+        </nav>
     );
 }
