@@ -58,7 +58,7 @@ export default function Hero() {
         >
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(192,201,238,0.18),transparent_35%),radial-gradient(circle_at_80%_0%,rgba(244,211,94,0.15),transparent_30%)]" />
 
-            <div className="container relative z-10 mx-auto px-4 md:px-6 py-16 md:py-24 lg:py-28 min-h-[80vh] flex items-center">
+            <div className="container relative z-10 mx-auto px-4 md:px-6 pt-120 md:pt-140 pb-12 min-h-[80vh] flex items-center">
                 <div className="grid max-w-6xl mx-auto gap-12 lg:gap-16 lg:grid-cols-2 lg:items-center">
 
                     {/* Left Column: Text */}
@@ -94,9 +94,10 @@ export default function Hero() {
                             <MagneticButton strength={0.3} className="inline-block">
                                 <button
                                     onClick={scrollToPersona}
-                                    className="group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-primary px-8 py-4 text-lg font-bold text-white shadow-lg transition-all hover:bg-secondary hover:scale-105 active:scale-95 cursor-pointer"
+                                    className="group relative inline-flex items-center gap-3 px-8 py-4 rounded-full bg-[#898AC4] text-white font-bold text-lg shadow-xl shadow-primary/30 hover:shadow-2xl hover:shadow-primary/40 hover:-translate-y-1 transition-all duration-300 cursor-pointer overflow-hidden"
                                 >
-                                    <span>Join the Brigade !</span>
+                                    <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300" />
+                                    <span className="relative z-10">Join the Brigade !</span>
                                     <ArrowDown className="h-5 w-5 transition-transform group-hover:translate-y-1" />
                                 </button>
                             </MagneticButton>
