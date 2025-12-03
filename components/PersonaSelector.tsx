@@ -195,7 +195,7 @@ export default function PersonaSelector() {
     };
 
     return (
-        <section ref={sectionRef} id="persona-selector" className="persona-selector-section section-spacing px-4 md:px-6 container mx-auto min-h-[800px] flex flex-col justify-center relative">
+        <section ref={sectionRef} id="persona-selector" className="py-10 px-4 md:px-6 container mx-auto min-h-[800px] flex flex-col justify-center relative">
             {/* Navigation Anchors */}
             <div id="devenir-compagnon" className="absolute -top-24 left-0 w-full h-0 pointer-events-none" />
             <div id="trouver-compagnon" className="absolute -top-24 left-0 w-full h-0 pointer-events-none" />

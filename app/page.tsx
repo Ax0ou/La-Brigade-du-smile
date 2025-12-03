@@ -1,4 +1,3 @@
-import IntroOverlay from "@/components/IntroOverlay";
 import Navbar from "@/components/Navbar";
 import Hero from "@/components/Hero";
 import ValueProps from "@/components/ValueProps";
@@ -7,15 +6,12 @@ import Footer from "@/components/Footer";
 
 export default function Home() {
   return (
-    <>
-      <IntroOverlay />
-      <main className="min-h-screen flex flex-col overflow-x-hidden">
-        <Navbar />
-        <Hero />
-        <ValueProps />
-        <PersonaSelector />
-        <Footer />
-      </main>
-    </>
+    <main className="min-h-screen flex flex-col overflow-x-hidden">
+      <Navbar />
+      <Hero />
+      <ValueProps />
+      <PersonaSelector />
+      <Footer />
+    </main>
   );
 }
