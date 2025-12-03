@@ -6,8 +6,18 @@ import TextReveal from "@/components/ui/TextReveal";
 
 const pillars = [
     {
-        title: "Compagnonnage / Lien social",
-        description: "Visites à domicile, sorties culturelles, discussions passionnées.",
+        title: "Aide pratique",
+        description: "Aller faire les courses, changer une ampoule, tondre la pelouse : tous les petits gestes du quotidien qui deviennent une montagne de stress pour nos ainés",
+        icon: Hammer,
+        color: "text-accent-green",
+        bg: "bg-accent-green/10",
+        gradient: "from-accent-green/20 to-accent-green/5",
+        border: "group-hover:border-accent-green/50",
+        shadow: "group-hover:shadow-accent-green/20",
+    },
+    {
+        title: "Lien social",
+        description: "Visites à domicile pour check-up, conversations, etc",
         icon: HeartHandshake,
         color: "text-primary",
         bg: "bg-primary/10",
@@ -17,7 +27,7 @@ const pillars = [
     },
     {
         title: "Stimulation et apprentissage",
-        description: "Ateliers cognitifs, aide numérique, jeux de mémoire.",
+        description: "Ateliers cognitifs, créatifs et numériques pour stimuler mémoire, autonomie et créativité.",
         icon: BrainCircuit,
         color: "text-accent-yellow",
         bg: "bg-accent-yellow/10",
@@ -25,23 +35,13 @@ const pillars = [
         border: "group-hover:border-accent-yellow/50",
         shadow: "group-hover:shadow-accent-yellow/20",
     },
-    {
-        title: "Aide pratique à domicile",
-        description: "Petits travaux, assistance aux déplacements, courses.",
-        icon: Hammer,
-        color: "text-accent-green",
-        bg: "bg-accent-green/10",
-        gradient: "from-accent-green/20 to-accent-green/5",
-        border: "group-hover:border-accent-green/50",
-        shadow: "group-hover:shadow-accent-green/20",
-    },
 ];
 
 export default function ValueProps() {
     return (
         <section className="py-24 px-4 md:px-6 relative overflow-hidden bg-gradient-to-b from-[#FFF2E0] to-white">
             {/* Background Decor */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.8)_0%,rgba(255,255,255,0)_70%)] pointer-events-none -z-10" />
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.8)_0%,rgba(255,255,255,0)_70%)] pointer-events-none -z-10" />
 
             <div className="container mx-auto">
                 <div className="text-center mb-16 space-y-4">

@@ -8,20 +8,23 @@ import { motion, useScroll, useTransform } from "framer-motion";
 export default function Navbar() {
     const { scrollY } = useScroll();
 
-    // Scroll threshold: curtain stays until 200px, then lifts slowly over 600px
+    // Desktop: curtain lifts. Mobile: curtain fades quickly
     const curtainY = useTransform(
         scrollY,
-        [0, 200, 800],
+        [0, 100, 600],
         ["0%", "0%", "-100%"]
     );
+    const curtainOpacity = useTransform(scrollY, [0, 200], [1, 0]);
+
+
 
     // Logo animations
-    const logoScale = useTransform(scrollY, [0, 800], [5, 1]);
-    const heroLogoOpacity = useTransform(scrollY, [0, 200, 800], [1, 1, 0]);
-    const navbarLogoOpacity = useTransform(scrollY, [200, 800], [0, 1]);
+    const logoScale = useTransform(scrollY, [0, 600], [2.5, 1]);
+    const heroLogoOpacity = useTransform(scrollY, [0, 100, 600], [1, 1, 0]);
+    const navbarLogoOpacity = useTransform(scrollY, [100, 600], [0, 1]);
 
     // Nav items opacity
-    const navItemsOpacity = useTransform(scrollY, [200, 800], [0, 1]);
+    const navItemsOpacity = useTransform(scrollY, [100, 600], [0, 1]);
 
     // Scroll indicator opacity (fades out when scrolling starts)
     const scrollIndicatorOpacity = useTransform(scrollY, [0, 100], [1, 0]);
@@ -29,8 +32,18 @@ export default function Navbar() {
     return (
         <>
             {/* Violet "curtain" that stays until scroll threshold */}
+            {/* Mobile Curtain: Quick Fade */}
             <motion.div
-                className="fixed inset-0 bg-[#C0C9EE] z-[45]"
+                className="fixed inset-0 bg-[#C0C9EE] z-[45] md:hidden"
+                style={{
+                    opacity: curtainOpacity,
+                    pointerEvents: useTransform(scrollY, [150, 200], ["auto", "none"] as any)
+                }}
+            />
+
+            {/* Desktop Curtain: Lifts Up */}
+            <motion.div
+                className="fixed inset-0 bg-[#C0C9EE] z-[45] hidden md:block"
                 style={{
                     y: curtainY,
                     pointerEvents: useTransform(scrollY, [700, 800], ["auto", "none"] as any)
@@ -38,7 +51,7 @@ export default function Navbar() {
             >
                 {/* Scroll Indicator */}
                 <motion.div
-                    className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-foreground/60"
+                    className="absolute bottom-24 md:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-foreground/60"
                     style={{ opacity: scrollIndicatorOpacity }}
                 >
                     <span className="text-sm font-medium">Scroll pour découvrir</span>
@@ -69,8 +82,27 @@ export default function Navbar() {
             </motion.div>
 
             {/* Hero Logo - Centered on screen */}
+            {/* Mobile Hero Logo - Fades with curtain */}
             <motion.div
-                className="fixed inset-0 flex items-center justify-center z-[60] pointer-events-none"
+                className="fixed inset-0 flex md:hidden items-center justify-center z-[60] pointer-events-none"
+                style={{
+                    opacity: curtainOpacity,
+                    scale: logoScale,
+                }}
+            >
+                <Image
+                    src="/Lbds_logo.svg"
+                    alt="La Brigade du Smile"
+                    width={200}
+                    height={200}
+                    className="w-auto h-16 object-contain"
+                    priority
+                />
+            </motion.div>
+
+            {/* Desktop Hero Logo - Standard animation */}
+            <motion.div
+                className="fixed inset-0 hidden md:flex items-center justify-center z-[60] pointer-events-none"
                 style={{
                     opacity: heroLogoOpacity,
                     scale: logoScale,
@@ -100,7 +132,7 @@ export default function Navbar() {
 
                     {/* Left: Navigation Links */}
                     <motion.div
-                        className="flex-1 flex justify-start items-center"
+                        className="flex-1 hidden md:flex justify-start items-center"
                         style={{ opacity: navItemsOpacity }}
                     >
                         <div className="hidden md:flex items-center gap-6">
@@ -128,9 +160,9 @@ export default function Navbar() {
                             <Image
                                 src="/Lbds_logo.svg"
                                 alt="La Brigade du Smile"
-                                width={190}
-                                height={100}
-                                className="h-16 w-auto object-contain"
+                                width={120}
+                                height={40}
+                                className="h-10 w-auto object-contain"
                                 priority
                             />
                         </Link>

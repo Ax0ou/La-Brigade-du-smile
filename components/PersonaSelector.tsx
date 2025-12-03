@@ -23,6 +23,9 @@ const personas = {
         border: "border-primary",
         shadow: "shadow-primary/30",
         gradient: "from-primary/20 to-primary/5",
+        textColor: "text-white",
+        uiColor: "bg-white/20",
+        backBtnClass: "bg-white/10 text-white/80 hover:text-white hover:bg-white/20",
         title: "Complétez vos revenus en créant du lien",
         description: "Rejoignez une communauté de jeunes engagés et vivez une expérience humaine unique.",
         points: [
@@ -56,13 +59,20 @@ const personas = {
         border: "border-accent-yellow",
         shadow: "shadow-accent-yellow/30",
         gradient: "from-accent-yellow/20 to-accent-yellow/5",
+        textColor: "text-[#4A3B32]",
+        uiColor: "bg-[#4A3B32]/10",
+        backBtnClass: "bg-[#4A3B32]/10 text-[#4A3B32]/80 hover:text-[#4A3B32] hover:bg-[#4A3B32]/20",
         title: "Offrez un compagnon de confiance",
-        description: "Une présence bienveillante et stimulante pour vos proches, assurée par des jeunes sélectionnés.",
+        description: "Transformer votre inquiétude en sérénité grâce à une présence régulière, sécurisée et pleine de vie pour vos parents.",
         points: [
-            "Stimulation et joie de vivre",
-            "Étudiants rigoureusement sélectionnés",
-            "Accompagnement sur-mesure",
-            "Tranquillité d'esprit totale",
+            {
+                title: "Le Check-up Sécurisé et l’aide pratique",
+                desc: "Un compagnon qualifié et formé vient à domicile. Sa mission ? Vérifier que tout se passe bien, que votre parent est en bonne forme d'esprit, l’accompagner sur les tâches du quotidien. C'est le petit \"check-up\" régulier que vous ne pouvez plus faire."
+            },
+            {
+                title: "L’énergie de la Jeunesse, la stimulation",
+                desc: "Au-delà de la vérification, c'est un moment de vie. Nos jeunes brisent l'isolement en apportant une énergie neuve, jeune et bienveillante."
+            }
         ],
         cta: "Trouver une perle",
         formTitle: "Parlons-en",
@@ -77,13 +87,28 @@ const personas = {
         border: "border-accent-green",
         shadow: "shadow-accent-green/30",
         gradient: "from-accent-green/20 to-accent-green/5",
-        title: "Renforcez le bien-être de vos résidents",
-        description: "Une solution clé en main pour dynamiser la vie sociale de votre établissement.",
+        textColor: "text-[#4A3B32]",
+        uiColor: "bg-[#4A3B32]/10",
+        backBtnClass: "bg-[#4A3B32]/10 text-[#4A3B32]/80 hover:text-[#4A3B32] hover:bg-[#4A3B32]/20",
+        title: "Renforcez le bien-être de vos résidents grâce à nos compagnons intergénérationnels",
+        description: "Apportez jeunesse, dynamisme et stimulation !",
         points: [
-            "Amélioration de la qualité de vie",
-            "Soutien aux équipes soignantes",
-            "Image d'établissement innovante",
-            "Flexibilité d'intervention",
+            {
+                title: "Améliore la qualité de vie des résidents",
+                desc: "Nos compagnons créent des interactions humaines, proposent des activités stimulantes et renforcent le lien social pour réduire l’isolement de vos résidents."
+            },
+            {
+                title: "Soutien au personnel soignant",
+                desc: "En déléguant certaines activités sociales ou ateliers à nos compagnons, vos équipes peuvent se concentrer sur les soins et tâches essentielles."
+            },
+            {
+                title: "Renforce l’image de votre établissement",
+                desc: "Proposer des interactions intergénérationnelles valorise votre établissement, montre votre engagement envers le bien-être des résidents et crée des expériences positives tournées vers l’extérieur."
+            },
+            {
+                title: "Flexibilité et adaptation",
+                desc: "Nos compagnons interviennent selon vos horaires, vos besoins et le rythme de vos résidents, pour un service sur-mesure et facile à intégrer dans votre organisation."
+            }
         ],
         cta: "Découvrir l'offre",
         formTitle: "Espace Pro",
@@ -101,11 +126,31 @@ export default function PersonaSelector() {
 
     useEffect(() => {
         if (step === "details" && sectionRef.current) {
-            const yOffset = -100; // Offset to account for fixed header if any, or just breathing room
-            const element = sectionRef.current;
-            const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+            // Add a small delay to ensure layout is stable after animation starts
+            setTimeout(() => {
+                if (!sectionRef.current) return;
 
-            window.scrollTo({ top: y, behavior: 'smooth' });
+                const element = sectionRef.current;
+                const elementRect = element.getBoundingClientRect();
+                const absoluteElementTop = elementRect.top + window.pageYOffset;
+                const elementHeight = elementRect.height;
+                const windowHeight = window.innerHeight;
+
+                // Calculate space above to center the element
+                let spaceAbove = (windowHeight - elementHeight) / 2;
+
+                // Ensure we have at least 120px top padding (Navbar + breathing room)
+                // If the element is taller than the window, this will prioritize the top
+                const minSpaceAbove = 120;
+
+                if (spaceAbove < minSpaceAbove) {
+                    spaceAbove = minSpaceAbove;
+                }
+
+                const targetScrollY = absoluteElementTop - spaceAbove;
+
+                window.scrollTo({ top: targetScrollY, behavior: 'smooth' });
+            }, 100);
         }
     }, [step]);
 
@@ -252,14 +297,14 @@ export default function PersonaSelector() {
                                 {/* Absolute Back Button - Always visible top-left */}
                                 <button
                                     onClick={handleBack}
-                                    className="absolute top-4 left-4 z-30 flex items-center justify-center w-10 h-10 rounded-full bg-white/20 backdrop-blur-md border border-white/30 text-white shadow-lg hover:bg-white/30 transition-all cursor-pointer lg:hidden"
+                                    className={`absolute top-4 left-4 z-30 flex items-center justify-center w-10 h-10 rounded-full backdrop-blur-md border border-white/30 shadow-lg transition-all cursor-pointer lg:hidden ${currentPersona.backBtnClass}`}
                                 >
                                     <ArrowLeft className="w-5 h-5" />
                                 </button>
 
                                 <div className="flex flex-col-reverse lg:grid lg:grid-cols-12 min-h-[400px]">
                                     {/* Left: Details (Bottom on Mobile) */}
-                                    <div className={`lg:col-span-5 p-6 md:p-8 ${currentPersona.color} text-white flex flex-col justify-between relative overflow-hidden`}>
+                                    <div className={`lg:col-span-5 p-6 md:p-8 ${currentPersona.color} ${currentPersona.textColor} flex flex-col justify-between relative overflow-hidden`}>
                                         {/* Abstract Shapes */}
                                         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/3 blur-3xl" />
                                         <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/5 rounded-full translate-y-1/3 -translate-x-1/3 blur-2xl" />
@@ -268,7 +313,7 @@ export default function PersonaSelector() {
                                             {/* Desktop Back Button */}
                                             <button
                                                 onClick={handleBack}
-                                                className="hidden lg:flex items-center gap-2 text-white/80 hover:text-white transition-colors mb-6 group bg-white/10 w-fit px-3 py-1.5 rounded-full backdrop-blur-sm hover:bg-white/20 cursor-pointer"
+                                                className={`hidden lg:flex items-center gap-2 transition-colors mb-6 group w-fit px-3 py-1.5 rounded-full backdrop-blur-sm cursor-pointer ${currentPersona.backBtnClass}`}
                                             >
                                                 <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                                                 <span className="text-sm font-medium">Retour</span>
@@ -279,7 +324,7 @@ export default function PersonaSelector() {
                                                 animate={{ opacity: 1, x: 0 }}
                                                 transition={{ delay: 0.2 }}
                                             >
-                                                <div className="mb-4 p-2.5 rounded-2xl bg-white/20 w-fit backdrop-blur-md shadow-inner border border-white/10 hidden lg:block">
+                                                <div className={`mb-4 p-2.5 rounded-2xl w-fit backdrop-blur-md shadow-inner border border-white/10 hidden lg:block ${currentPersona.uiColor}`}>
                                                     <currentPersona.icon className="w-6 h-6" />
                                                 </div>
 
@@ -287,7 +332,7 @@ export default function PersonaSelector() {
                                                     {currentPersona.title}
                                                 </h3>
 
-                                                <div className="w-12 h-1 bg-white/30 rounded-full mb-4" />
+                                                <div className={`w-12 h-1 rounded-full mb-4 ${currentPersona.uiColor}`} />
 
                                                 <ul className="space-y-3">
                                                     {currentPersona.points.map((point: any, index: number) => (
@@ -296,9 +341,9 @@ export default function PersonaSelector() {
                                                             initial={{ opacity: 0, x: -20 }}
                                                             animate={{ opacity: 1, x: 0 }}
                                                             transition={{ delay: 0.3 + index * 0.1 }}
-                                                            className="flex items-start gap-3 text-sm md:text-base text-white/90 font-light"
+                                                            className={`flex items-start gap-3 text-sm md:text-base font-light ${currentPersona.textColor}/90`}
                                                         >
-                                                            <div className="mt-1 p-1 bg-white/20 rounded-full shrink-0">
+                                                            <div className={`mt-1 p-1 rounded-full shrink-0 ${currentPersona.uiColor}`}>
                                                                 <Check className="w-3 h-3" strokeWidth={4} />
                                                             </div>
 
@@ -306,8 +351,8 @@ export default function PersonaSelector() {
                                                                 <span>{point}</span>
                                                             ) : (
                                                                 <div className="flex flex-col gap-0.5">
-                                                                    <span className="font-bold text-white text-sm md:text-base leading-tight">{point.title}</span>
-                                                                    <span className="text-white/80 text-xs md:text-sm leading-relaxed">{point.desc}</span>
+                                                                    <span className={`font-bold text-sm md:text-base leading-tight ${currentPersona.textColor}`}>{point.title}</span>
+                                                                    <span className={`text-xs md:text-sm leading-relaxed ${currentPersona.textColor}/80`}>{point.desc}</span>
                                                                 </div>
                                                             )}
                                                         </motion.li>

@@ -9,7 +9,7 @@ import TextReveal from "@/components/ui/TextReveal";
 
 export default function Hero() {
     const { scrollY } = useScroll();
-    const highlightScale = useTransform(scrollY, [800, 1000], [0, 1]);
+    const highlightScale = useTransform(scrollY, [100, 300], [0, 1]);
 
     const containerRef = useRef(null);
     const { scrollYProgress } = useScroll({
@@ -54,10 +54,10 @@ export default function Hero() {
     return (
         <section
             ref={containerRef}
-            className="relative min-h-[200vh] bg-[#FFF2E0]"
+            className="relative min-h-screen md:min-h-[200vh] bg-[#FFF2E0]"
         >
-            <div className="sticky top-20 h-[calc(100vh-5rem)] w-full overflow-hidden">
-                <div className="relative flex h-full items-center justify-center px-4 md:px-6">
+            <div className="relative md:sticky md:top-0 h-auto md:h-screen w-full md:overflow-hidden">
+                <div className="relative flex h-full min-h-screen md:min-h-0 items-center justify-center px-4 md:px-6 py-20 md:py-0">
                     <div className="container relative z-10 mx-auto grid max-w-6xl gap-12 md:grid-cols-2 md:items-center">
 
                         {/* Left Column: Text */}
@@ -68,13 +68,13 @@ export default function Hero() {
                             animate="visible"
                         >
                             <motion.div variants={itemVariants}>
-                                <h1 className="font-serif text-5xl font-bold leading-tight tracking-tight text-foreground md:text-7xl">
+                                <h1 className="font-serif text-3xl font-bold leading-tight tracking-tight text-foreground md:text-7xl">
                                     <TextReveal>En mission pour relier les</TextReveal>{" "}
                                     <span className="relative inline-block">
                                         <span className="relative z-10">générations</span>
                                         <motion.span
                                             style={{ scaleX: highlightScale }}
-                                            className="absolute bottom-0 -left-[5%] -z-10 h-[0.6em] w-[110%] origin-left -rotate-2 rounded-sm bg-[#C0C9EE]"
+                                            className="absolute bottom-0 left-0 -z-10 h-[0.6em] w-full origin-left -rotate-2 rounded-sm bg-[#C0C9EE]"
                                         />
                                     </span>
                                 </h1>
@@ -103,7 +103,7 @@ export default function Hero() {
                         </motion.div>
 
                         {/* Right Column: Image with Organic Shape */}
-                        <div className="relative mx-auto aspect-square w-full max-w-md md:max-w-full">
+                        <div className="relative mx-auto aspect-square w-full max-w-md md:max-w-full mt-8 md:mt-0">
                             <motion.div
                                 style={{ y: y1 }}
                                 initial={{ opacity: 0, scale: 0.95 }}
