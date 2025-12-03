@@ -39,7 +39,7 @@ const pillars = [
 
 export default function ValueProps() {
     return (
-        <section className="py-24 px-4 md:px-6 relative overflow-hidden bg-gradient-to-b from-[#FFF2E0] to-white">
+        <section className="value-props-section section-spacing px-4 md:px-6 relative overflow-hidden">
             {/* Background Decor */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.8)_0%,rgba(255,255,255,0)_70%)] pointer-events-none -z-10" />
 
