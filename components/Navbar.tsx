@@ -8,62 +8,57 @@ import { motion, useScroll, useTransform } from "framer-motion";
 export default function Navbar() {
     const { scrollY } = useScroll();
 
-    // Desktop: curtain lifts. Mobile: curtain fades quickly
-    const curtainY = useTransform(
-        scrollY,
-        [0, 100, 600],
-        ["0%", "0%", "-100%"]
-    );
-    const curtainOpacity = useTransform(scrollY, [0, 200], [1, 0]);
+    // Curtain: unified violet overlay that lifts away without shifting the hero
+    const curtainY = useTransform(scrollY, [0, 120, 260], ["0%", "-35%", "-115%"]);
+    const curtainOpacity = useTransform(scrollY, [0, 120, 260], [1, 1, 0]);
+    const curtainPointerEvents = useTransform<string>(scrollY, [0, 200], ["auto", "none"]);
 
-
-
-    // Logo animations
-    const logoScale = useTransform(scrollY, [0, 600], [2.5, 1]);
-    const heroLogoOpacity = useTransform(scrollY, [0, 100, 600], [1, 1, 0]);
-    const navbarLogoOpacity = useTransform(scrollY, [100, 600], [0, 1]);
+    // Logo animation while the curtain lifts
+    const logoScale = useTransform(scrollY, [0, 180], [1.1, 0.9]);
 
     // Nav items opacity
-    const navItemsOpacity = useTransform(scrollY, [100, 600], [0, 1]);
+    const navbarLogoOpacity = useTransform(scrollY, [160, 260], [0, 1]);
+    const navItemsOpacity = useTransform(scrollY, [160, 260], [0, 1]);
 
     // Scroll indicator opacity (fades out when scrolling starts)
     const scrollIndicatorOpacity = useTransform(scrollY, [0, 100], [1, 0]);
 
     return (
         <>
-            {/* Violet "curtain" that stays until scroll threshold */}
-            {/* Mobile Curtain: Quick Fade */}
+            {/* Unified violet curtain that lifts with the logo */}
             <motion.div
-                className="fixed inset-0 bg-[#C0C9EE] z-[45] md:hidden"
-                style={{
-                    opacity: curtainOpacity,
-                    pointerEvents: useTransform(scrollY, [150, 200], ["auto", "none"] as any)
-                }}
-            />
-
-            {/* Desktop Curtain: Lifts Up */}
-            <motion.div
-                className="fixed inset-0 bg-[#C0C9EE] z-[45] hidden md:block"
-                style={{
-                    y: curtainY,
-                    pointerEvents: useTransform(scrollY, [700, 800], ["auto", "none"] as any)
-                }}
+                className="fixed inset-0 z-[70] overflow-hidden bg-[#C0C9EE]"
+                style={{ y: curtainY, opacity: curtainOpacity, pointerEvents: curtainPointerEvents }}
             >
+                <motion.div
+                    className="absolute inset-0 flex items-center justify-center"
+                    style={{ opacity: curtainOpacity, scale: logoScale }}
+                >
+                    <motion.div
+                        animate={{ y: [0, -6, 0] }}
+                        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                        className="rounded-full bg-white/40 px-8 py-6 shadow-lg"
+                    >
+                        <Image
+                            src="/Lbds_logo.svg"
+                            alt="La Brigade du Smile"
+                            width={220}
+                            height={72}
+                            className="h-16 w-auto object-contain"
+                            priority
+                        />
+                    </motion.div>
+                </motion.div>
+
                 {/* Scroll Indicator */}
                 <motion.div
-                    className="absolute bottom-24 md:bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-foreground/60"
+                    className="absolute bottom-16 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-foreground/60"
                     style={{ opacity: scrollIndicatorOpacity }}
                 >
                     <span className="text-sm font-medium">Scroll pour découvrir</span>
                     <motion.div
-                        animate={{
-                            y: [0, 10, 0]
-                        }}
-                        transition={{
-                            duration: 1.5,
-                            repeat: Infinity,
-                            ease: "easeInOut"
-                        }}
+                        animate={{ y: [0, 10, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                     >
                         <svg
                             width="24"
@@ -81,50 +76,13 @@ export default function Navbar() {
                 </motion.div>
             </motion.div>
 
-            {/* Hero Logo - Centered on screen */}
-            {/* Mobile Hero Logo - Fades with curtain */}
-            <motion.div
-                className="fixed inset-0 flex md:hidden items-center justify-center z-[60] pointer-events-none"
-                style={{
-                    opacity: curtainOpacity,
-                    scale: logoScale,
-                }}
-            >
-                <Image
-                    src="/Lbds_logo.svg"
-                    alt="La Brigade du Smile"
-                    width={200}
-                    height={200}
-                    className="w-auto h-16 object-contain"
-                    priority
-                />
-            </motion.div>
-
-            {/* Desktop Hero Logo - Standard animation */}
-            <motion.div
-                className="fixed inset-0 hidden md:flex items-center justify-center z-[60] pointer-events-none"
-                style={{
-                    opacity: heroLogoOpacity,
-                    scale: logoScale,
-                }}
-            >
-                <Image
-                    src="/Lbds_logo.svg"
-                    alt="La Brigade du Smile"
-                    width={200}
-                    height={200}
-                    className="w-auto h-32 object-contain"
-                    priority
-                />
-            </motion.div>
-
             {/* Navbar */}
             <nav className="sticky top-0 z-50 w-full">
                 {/* Animated navbar background - only appears after curtain lifts */}
                 <motion.div
                     className="absolute inset-0 bg-[#C0C9EE]/80 backdrop-blur-md -z-10"
                     style={{
-                        opacity: useTransform(scrollY, [750, 850], [0, 1])
+                        opacity: useTransform(scrollY, [700, 850], [0, 1])
                     }}
                 />
 
