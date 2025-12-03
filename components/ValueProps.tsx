@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { HeartHandshake, BrainCircuit, Hammer, Sparkles } from "lucide-react";
 import TextReveal from "@/components/ui/TextReveal";
 
+import { useIsMobile } from "@/hooks/use-mobile";
+
 const pillars = [
     {
         title: "Aide pratique",
@@ -12,8 +14,8 @@ const pillars = [
         color: "text-accent-green",
         bg: "bg-accent-green/10",
         gradient: "from-accent-green/20 to-accent-green/5",
-        border: "group-hover:border-accent-green/50",
-        shadow: "group-hover:shadow-accent-green/20",
+        border: "md:group-hover:border-accent-green/50",
+        shadow: "md:group-hover:shadow-accent-green/20",
     },
     {
         title: "Lien social",
@@ -22,8 +24,8 @@ const pillars = [
         color: "text-primary",
         bg: "bg-primary/10",
         gradient: "from-primary/20 to-primary/5",
-        border: "group-hover:border-primary/50",
-        shadow: "group-hover:shadow-primary/20",
+        border: "md:group-hover:border-primary/50",
+        shadow: "md:group-hover:shadow-primary/20",
     },
     {
         title: "Stimulation et apprentissage",
@@ -32,12 +34,14 @@ const pillars = [
         color: "text-accent-yellow",
         bg: "bg-accent-yellow/10",
         gradient: "from-accent-yellow/20 to-accent-yellow/5",
-        border: "group-hover:border-accent-yellow/50",
-        shadow: "group-hover:shadow-accent-yellow/20",
+        border: "md:group-hover:border-accent-yellow/50",
+        shadow: "md:group-hover:shadow-accent-yellow/20",
     },
 ];
 
 export default function ValueProps() {
+    const isMobile = useIsMobile();
+
     return (
         <section className="py-24 px-4 md:px-6 relative overflow-hidden bg-gradient-to-b from-[#FFF2E0] to-white">
             {/* Background Decor */}
@@ -73,24 +77,24 @@ export default function ValueProps() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.5, delay: index * 0.15 }}
-                            whileHover={{ y: -10 }}
-                            className={`group relative flex flex-col items-center text-center p-8 rounded-[2.5rem] bg-white/40 backdrop-blur-xl border border-white/60 hover:border-white shadow-xl hover:shadow-2xl transition-all duration-500 overflow-hidden ${pillar.shadow}`}
+                            whileHover={!isMobile ? { y: -10 } : {}}
+                            className={`group relative flex flex-col items-center text-center p-8 rounded-[2.5rem] bg-white/40 backdrop-blur-xl border border-white/60 hover:border-white shadow-xl md:hover:shadow-2xl transition-all duration-500 overflow-hidden ${pillar.shadow}`}
                         >
                             {/* Gradient Background on Hover */}
-                            <div className={`absolute inset-0 bg-gradient-to-br ${pillar.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+                            <div className={`absolute inset-0 bg-gradient-to-br ${pillar.gradient} opacity-0 md:group-hover:opacity-100 transition-opacity duration-500`} />
 
                             {/* Icon */}
-                            <div className={`relative mb-8 w-20 h-20 rounded-2xl ${pillar.bg} flex items-center justify-center ${pillar.color} shadow-sm group-hover:scale-110 group-hover:rotate-3 transition-all duration-500`}>
+                            <div className={`relative mb-8 w-20 h-20 rounded-2xl ${pillar.bg} flex items-center justify-center ${pillar.color} shadow-sm md:group-hover:scale-110 md:group-hover:rotate-3 transition-all duration-500`}>
                                 <pillar.icon className="w-10 h-10" />
-                                <div className="absolute inset-0 bg-white/20 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity" />
+                                <div className="absolute inset-0 bg-white/20 rounded-2xl opacity-0 md:group-hover:opacity-100 transition-opacity" />
                             </div>
 
                             {/* Content */}
                             <div className="relative z-10">
-                                <h3 className="text-2xl font-serif font-bold mb-4 text-foreground group-hover:text-primary transition-colors duration-300">
+                                <h3 className="text-2xl font-serif font-bold mb-4 text-foreground md:group-hover:text-primary transition-colors duration-300">
                                     {pillar.title}
                                 </h3>
-                                <p className="text-foreground/70 text-lg leading-relaxed group-hover:text-foreground/90 transition-colors">
+                                <p className="text-foreground/70 text-lg leading-relaxed md:group-hover:text-foreground/90 transition-colors">
                                     {pillar.description}
                                 </p>
                             </div>

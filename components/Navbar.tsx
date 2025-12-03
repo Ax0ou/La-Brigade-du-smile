@@ -140,19 +140,36 @@ export default function Navbar() {
                                 priority
                             />
                         </Link>
-                    </motion.div>
-
-                    {/* Right: Contact CTA */}
-                    <motion.div
-                        className="flex-1 flex justify-end items-center"
-                        style={{ opacity: navItemsOpacity }}
-                    >
-                        <a href="mailto:roussel.agathe0@gmail.com" className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-secondary transition-colors">
-                            Contact
-                        </a>
-                    </motion.div>
+                        <Link
+                            href="#trouver-compagnon"
+                            className="text-sm font-medium text-foreground transition-colors"
+                        >
+                            <WavyText text="Trouver un compagnon" />
+                        </Link>
+                    </div>
                 </div>
-            </nav>
-        </>
+
+                {/* Center: Navbar Logo */}
+                <div className="flex items-center justify-center mt-1">
+                    <Link href="/" className="flex items-center">
+                        <Image
+                            src="/Lbds_logo.svg"
+                            alt="La Brigade du Smile"
+                            width={120}
+                            height={60}
+                            className="h-16 w-auto object-contain"
+                            priority
+                        />
+                    </Link>
+                </div>
+
+                {/* Right: Contact CTA */}
+                <div className="flex-1 flex justify-end items-center">
+                    <a href="mailto:roussel.agathe0@gmail.com" className="rounded-full bg-primary px-4 py-2 text-sm font-bold text-white hover:bg-secondary transition-colors">
+                        Contact
+                    </a>
+                </div>
+            </div>
+        </nav>
     );
 }
