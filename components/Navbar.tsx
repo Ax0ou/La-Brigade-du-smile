@@ -8,14 +8,13 @@ import { motion, useScroll, useTransform } from "framer-motion";
 export default function Navbar() {
     const { scrollY } = useScroll();
 
-    // Desktop: curtain lifts. Mobile: curtain fades quickly
+    // Desktop: curtain lifts sooner and fades to fully reveal hero
     const curtainY = useTransform(
         scrollY,
-        [0, 100, 600],
+        [0, 150, 450],
         ["0%", "0%", "-100%"]
     );
-    const curtainOpacity = useTransform(scrollY, [0, 200], [1, 0]);
-
+    const curtainOpacity = useTransform(scrollY, [0, 150, 450], [1, 1, 0]);
 
 
     // Logo animations
@@ -37,7 +36,7 @@ export default function Navbar() {
                 className="fixed inset-0 bg-[#C0C9EE] z-[45] md:hidden"
                 style={{
                     opacity: curtainOpacity,
-                    pointerEvents: useTransform(scrollY, [150, 200], ["auto", "none"] as any)
+                    pointerEvents: useTransform<string>(scrollY, [150, 200], ["auto", "none"])
                 }}
             />
 
@@ -46,7 +45,7 @@ export default function Navbar() {
                 className="fixed inset-0 bg-[#C0C9EE] z-[45] hidden md:block"
                 style={{
                     y: curtainY,
-                    pointerEvents: useTransform(scrollY, [700, 800], ["auto", "none"] as any)
+                    pointerEvents: useTransform<string>(scrollY, [350, 450], ["auto", "none"])
                 }}
             >
                 {/* Scroll Indicator */}
