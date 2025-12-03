@@ -34,14 +34,14 @@ export default function Navbar() {
                 </div>
 
                 {/* Center: Navbar Logo */}
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center mt-1">
                     <Link href="/" className="flex items-center">
                         <Image
                             src="/Lbds_logo.svg"
                             alt="La Brigade du Smile"
                             width={120}
-                            height={40}
-                            className="h-10 w-auto object-contain"
+                            height={60}
+                            className="h-16 w-auto object-contain"
                             priority
                         />
                     </Link>
