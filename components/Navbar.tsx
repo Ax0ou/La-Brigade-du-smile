@@ -8,10 +8,14 @@ import { motion, useScroll, useTransform } from "framer-motion";
 export default function Navbar() {
     const { scrollY } = useScroll();
 
-    // Curtain: unified violet overlay that lifts away without shifting the hero
-    const curtainY = useTransform(scrollY, [0, 120, 260], ["0%", "-35%", "-115%"]);
-    const curtainOpacity = useTransform(scrollY, [0, 120, 260], [1, 1, 0]);
-    const curtainPointerEvents = useTransform<string>(scrollY, [0, 200], ["auto", "none"]);
+    // Desktop: curtain lifts sooner and fades to fully reveal hero
+    const curtainY = useTransform(
+        scrollY,
+        [0, 150, 450],
+        ["0%", "0%", "-100%"]
+    );
+    const curtainOpacity = useTransform(scrollY, [0, 150, 450], [1, 1, 0]);
+
 
     // Logo animation while the curtain lifts
     const logoScale = useTransform(scrollY, [0, 180], [1.1, 0.9]);
@@ -27,8 +31,20 @@ export default function Navbar() {
         <>
             {/* Unified violet curtain that lifts with the logo */}
             <motion.div
-                className="fixed inset-0 z-[70] overflow-hidden bg-[#C0C9EE]"
-                style={{ y: curtainY, opacity: curtainOpacity, pointerEvents: curtainPointerEvents }}
+                className="fixed inset-0 bg-[#C0C9EE] z-[45] md:hidden"
+                style={{
+                    opacity: curtainOpacity,
+                    pointerEvents: useTransform<string>(scrollY, [150, 200], ["auto", "none"])
+                }}
+            />
+
+            {/* Desktop Curtain: Lifts Up */}
+            <motion.div
+                className="fixed inset-0 bg-[#C0C9EE] z-[45] hidden md:block"
+                style={{
+                    y: curtainY,
+                    pointerEvents: useTransform<string>(scrollY, [350, 450], ["auto", "none"])
+                }}
             >
                 <motion.div
                     className="absolute inset-0 flex items-center justify-center"
